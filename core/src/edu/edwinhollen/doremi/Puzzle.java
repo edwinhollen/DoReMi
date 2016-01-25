@@ -56,6 +56,7 @@ public class Puzzle {
         }
 
         // add extra notes
+
         while(extraNotes.size() < 4){
             Note candidate = new Note(Pick.pick(Chromatic.values()), Pick.integer(LOWEST_OCTAVE, HIGHEST_OCTAVE));
             if(this.solutionNotes.contains(candidate) || this.extraNotes.contains(candidate)) continue;

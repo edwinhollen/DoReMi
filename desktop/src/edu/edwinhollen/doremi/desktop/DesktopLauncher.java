@@ -9,11 +9,13 @@ import edu.edwinhollen.doremi.DoReMi;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		TexturePacker.Settings settings = new TexturePacker.Settings();
-		TexturePacker.process(settings, ".", ".", "doremi");
+		TexturePacker.process(settings, "images/", ".", "pack");
 
 
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 1280;
+		config.height = 720;
 		new LwjglApplication(new DoReMi(), config);
 	}
 }

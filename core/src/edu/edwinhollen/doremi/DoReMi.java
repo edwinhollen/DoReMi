@@ -10,10 +10,7 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -26,33 +23,37 @@ public class DoReMi extends ApplicationAdapter {
 	static Viewport viewport;
 	static Stage currentStage;
 	static TextureAtlas sprites;
+	static BitmapFont font;
 
 	static AssetManager assets;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		viewport = new FitViewport(135, 90);
+		viewport = new FitViewport(1280, 720);
 
-		sprites = new TextureAtlas("doremi.atlas");
+		sprites = new TextureAtlas("pack.atlas");
+		assets = new AssetManager();
 
-		Scale scale = new Scale(new Note(Chromatic.B_FLAT, 1), ScalePatterns.MINOR.getPattern());
-		System.out.println(scale.toString());
-
-		Puzzle puzzle = new Puzzle(Puzzle.Difficulty.EASY);
-		System.out.println(puzzle.toString());
+		font = new BitmapFont(Gdx.files.internal("fonts/font_black.fnt"));
 
 		changeStage(GameStage.class);
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		if(currentStage != null){
 			currentStage.act();
 			currentStage.draw();
 		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		super.resize(width, height);
 	}
 
 	public static void changeStage(Class<? extends Stage> newStageClass){
