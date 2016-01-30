@@ -16,4 +16,11 @@ public class Pick {
     public static <T> T pick(T[] array){
         return array[integer(0, array.length - 1)];
     }
+    public static boolean bool(double likelihood){
+        return integer(0, 100) < likelihood * 100;
+    }
+
+    public static boolean bool(){
+        return bool(0.5);
+    }
 }

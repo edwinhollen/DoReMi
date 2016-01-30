@@ -1,9 +1,6 @@
 package edu.edwinhollen.doremi;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by Fubar on 1/17/2016.
@@ -11,7 +8,7 @@ import java.util.Stack;
 public class Puzzle {
     private List<Note> solutionNotes, extraNotes;
 
-    private final static Integer LOWEST_OCTAVE = 1, HIGHEST_OCTAVE = 3;
+    private final static Integer LOWEST_OCTAVE = 2, HIGHEST_OCTAVE = 2;
 
 
     public Puzzle(Difficulty difficulty){
@@ -20,6 +17,8 @@ public class Puzzle {
 
         ScalePatterns pattern;
         Chromatic rootChromatic = Pick.pick(Chromatic.values());
+
+        // pick a scale pattern
         switch(difficulty){
             case MEDIUM:
                 pattern = Pick.pick(new ScalePatterns[]{ScalePatterns.MAJOR, ScalePatterns.MINOR});
@@ -56,11 +55,17 @@ public class Puzzle {
         }
 
         // add extra notes
+        Stack<Chromatic> availableChromatics = new Stack<Chromatic>();
+        availableChromatics.addAll(Arrays.asList(Chromatic.values()));
 
-        while(extraNotes.size() < 4){
-            Note candidate = new Note(Pick.pick(Chromatic.values()), Pick.integer(LOWEST_OCTAVE, HIGHEST_OCTAVE));
-            if(this.solutionNotes.contains(candidate) || this.extraNotes.contains(candidate)) continue;
-            this.extraNotes.add(candidate);
+        for(Note note : this.solutionNotes){
+            availableChromatics.remove(note.getChromatic());
+        }
+
+        Collections.shuffle(availableChromatics);
+
+        for(int i = 0; i < 4; i++){
+            this.extraNotes.add(new Note(availableChromatics.pop(), Pick.integer(LOWEST_OCTAVE, HIGHEST_OCTAVE)));
         }
     }
 
@@ -70,6 +75,13 @@ public class Puzzle {
 
     public List<Note> getExtraNotes() {
         return extraNotes;
+    }
+
+    public List<Note> getAllNotes(){
+        List<Note> newList = new LinkedList<Note>();
+        newList.addAll(this.solutionNotes);
+        newList.addAll(this.extraNotes);
+        return newList;
     }
 
     enum Difficulty{

@@ -30,7 +30,7 @@ public class DoReMi extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		viewport = new FitViewport(1280, 720);
+		viewport = new FitViewport(2560, 1440);
 
 		sprites = new TextureAtlas("pack.atlas");
 		assets = new AssetManager();
@@ -42,7 +42,8 @@ public class DoReMi extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+		Gdx.gl.glClearColor(254/255f, 205/255f, 106/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		if(currentStage != null){
 			currentStage.act();

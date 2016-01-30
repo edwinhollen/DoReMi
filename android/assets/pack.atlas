@@ -6,9 +6,37 @@ filter: Nearest,Nearest
 repeat: none
 femalemale
   rotate: false
-  xy: 2, 2
+  xy: 2, 196
   size: 579, 512
   orig: 579, 512
+  offset: 0, 0
+  index: -1
+flat
+  rotate: false
+  xy: 2, 2
+  size: 113, 192
+  orig: 113, 192
+  offset: 0, 0
+  index: -1
+notehead
+  rotate: false
+  xy: 117, 94
+  size: 191, 100
+  orig: 191, 100
+  offset: 0, 0
+  index: -1
+noteheadwithline
+  rotate: false
+  xy: 698, 608
+  size: 191, 100
+  orig: 191, 100
+  offset: 0, 0
+  index: -1
+sharp
+  rotate: false
+  xy: 583, 516
+  size: 113, 192
+  orig: 113, 192
   offset: 0, 0
   index: -1
 

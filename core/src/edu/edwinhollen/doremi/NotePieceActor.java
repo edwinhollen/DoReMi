@@ -78,8 +78,6 @@ public class NotePieceActor extends Image {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-
-
         if(dragListener.isDragging()){
             setColor(0, 0, 0, 0.25f);
             float oldX = getX();
@@ -90,6 +88,7 @@ public class NotePieceActor extends Image {
             setColor(Color.WHITE);
         }
         super.draw(batch, parentAlpha);
+
 
         DoReMi.font.setColor(Color.BLACK);
         DoReMi.font.draw(batch, getUserObject().toString(), getX(), getY());
