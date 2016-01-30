@@ -55,4 +55,28 @@ public class Note {
     public String toString() {
         return String.format("%s%d", this.chromatic.getShortName(), this.octave);
     }
+
+    public String toFancyString(){
+        char[] chromaticParts = chromatic.getShortName().toCharArray();
+        Character letter = chromaticParts[0];
+        Character accidental = chromaticParts[1];
+        String properAccidental = null;
+
+        switch(accidental){
+            case 'b':
+                properAccidental = "b";
+                break;
+            case '#':
+                properAccidental = "#";
+                break;
+            default:
+                properAccidental = "";
+        }
+
+        return String.format("%s%s", letter.toString().toUpperCase(), properAccidental);
+    }
+
+    public String toFancyStringWithOctave(){
+        return String.format("%s%d", toFancyString(), this.octave);
+    }
 }

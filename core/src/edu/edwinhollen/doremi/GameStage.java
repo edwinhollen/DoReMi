@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -69,7 +70,7 @@ public class GameStage extends Stage {
         allNoteActors.addAll(extraNoteActors);
         for(Actor a : allNoteActors){
             // make a group for the note piece and the note head
-            Group notePieceGroup = new Group();
+            final Group notePieceGroup = new Group();
             notePieceGroup.setSize(a.getWidth(), a.getHeight());
             notePieceGroup.setOrigin(Align.center);
 
@@ -89,7 +90,7 @@ public class GameStage extends Stage {
             switch(note.getChromatic()){
                 case C_NATURAL:
                 case C_SHARP:
-                    y = note.getOctave() < 3 ? 0.121f : 0.734f;
+                    y = note.getOctave() < 3 ? 0.121f : 0.592f;
                     drawLine = note.getOctave() < 3;
                     break;
                 case D_NATURAL:
@@ -132,9 +133,22 @@ public class GameStage extends Stage {
                 notePieceGroup.addActor(accidentalImage);
             }
 
+            Group notePieceWithLabelGroup = new Group();
+            notePieceWithLabelGroup.setSize(notePieceGroup.getWidth(), notePieceGroup.getHeight());
+            notePieceWithLabelGroup.setUserObject((Note) notePieceGroup.getUserObject());
+            notePieceWithLabelGroup.setOrigin(Align.center);
+
+            Label.LabelStyle notePieceLabelStyle = new Label.LabelStyle(DoReMi.font, Color.valueOf(note.getChromatic().getColor()));
+            final Label label = new Label(note.toFancyStringWithOctave(), notePieceLabelStyle);
+            label.setAlignment(Align.center);
+            label.setPosition(notePieceGroup.getWidth() / 2 - label.getWidth() / 2, - notePieceGroup.getHeight() * 0.28f);
+            label.addAction(Actions.fadeOut(0));
+            notePieceWithLabelGroup.addActor(label);
+
+            notePieceWithLabelGroup.addActor(notePieceGroup);
 
             // add event listeners for dragging
-            notePieceGroup.addListener(new DragListener(){
+            notePieceWithLabelGroup.addListener(new DragListener(){
                 @Override
                 public void drag(InputEvent event, float x, float y, int pointer) {
                     Actor actor = event.getListenerActor();
@@ -144,21 +158,30 @@ public class GameStage extends Stage {
                 }
             });
 
-            notePieceGroup.addListener(new ActorGestureListener(){
+            notePieceWithLabelGroup.addListener(new ActorGestureListener(){
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     Actor actor = event.getListenerActor();
                     Note note = (Note) actor.getUserObject();
                     assetManager.get(String.format("notes/%s.mp3", note.toString()), Sound.class).play(1.0f);
-                    actor.addAction(Actions.sequence(Actions.repeat(9, Actions.sequence(
+                    notePieceGroup.addAction(Actions.sequence(Actions.repeat(9, Actions.sequence(
                             Actions.rotateTo(-3f, 0.1f, Interpolation.circle),
                             Actions.rotateTo(3f, 0.1f, Interpolation.circle)
                     )), Actions.rotateTo(0f, 0.2f, Interpolation.circle)));
+                    label.addAction(Actions.sequence(Actions.fadeIn(0.05f), Actions.delay(1f), Actions.fadeOut(1f)));
                     super.tap(event, x, y, count, button);
                 }
             });
 
-            this.notePieces.addActor(notePieceGroup);
+            notePieceWithLabelGroup.setPosition(viewport.getWorldWidth() / 2 - notePieceWithLabelGroup.getWidth() / 2, viewport.getWorldHeight() * 0.15f);
+            notePieceWithLabelGroup.addAction(Actions.moveBy(
+                    Pick.integer(0, (int) (viewport.getWorldWidth() * 0.35f)) * (Pick.bool() ? -1 : 1),
+                    Pick.integer(0, (int) (viewport.getWorldHeight() * 0.1f)) * (Pick.bool() ? -1 : 1),
+                    0.25f,
+                    Interpolation.circle
+            ));
+
+            this.notePieces.addActor(notePieceWithLabelGroup);
         }
 
         // add note pieces
@@ -174,6 +197,7 @@ public class GameStage extends Stage {
     @Override
     public void draw() {
         super.draw();
+        /*
         getBatch().begin();
         for(Actor a : this.notePieces.getChildren()){
             Note note = (Note) a.getUserObject();
@@ -181,5 +205,6 @@ public class GameStage extends Stage {
             DoReMi.font.draw(getBatch(), note.toString(), a.getX(), a.getY());
         }
         getBatch().end();
+        */
     }
 }

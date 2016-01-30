@@ -8,16 +8,16 @@ import com.badlogic.gdx.graphics.Color;
 public enum Chromatic {
     C_NATURAL("cn", "d83b3b"),
     C_SHARP("c#", "d5803a"),
-    D_NATURAL("dn", "d5c83a"),
-    E_FLAT("eb", "9cd53a"),
-    E_NATURAL("en", "54d53a"),
+    D_NATURAL("dn", "4c3ad5"),
+    E_FLAT("eb", "953ad5"),
+    E_NATURAL("en", "d53a88"),
     F_NATURAL("fn", "3ad566"),
     F_SHARP("f#", "3ad5af"),
-    G_NATURAL("gn", "3ab6d5"),
-    A_FLAT("ab", "3a6ed5"),
-    A_NATURAL("an", "4c3ad5"),
-    B_FLAT("bb", "953ad5"),
-    B_NATURAL("bn", "d53a88");
+    G_NATURAL("gn", "d5c83a"),
+    A_FLAT("ab", "9cd53a"),
+    A_NATURAL("an", "54d53a"),
+    B_FLAT("bb", "3ab6d5"),
+    B_NATURAL("bn", "3a6ed5");
 
     private final String shortName;
     private final String color;

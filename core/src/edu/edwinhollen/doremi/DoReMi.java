@@ -43,7 +43,7 @@ public class DoReMi extends ApplicationAdapter {
 	@Override
 	public void render () {
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-		Gdx.gl.glClearColor(254/255f, 205/255f, 106/255f, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		if(currentStage != null){
 			currentStage.act();
