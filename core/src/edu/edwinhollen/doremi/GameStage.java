@@ -6,19 +6,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,15 +28,64 @@ import java.util.List;
  */
 public class GameStage extends Stage {
     final Puzzle puzzle;
+    final PuzzleStatistics puzzleStatistics;
+
+    private boolean solved = false;
+
     AssetManager assetManager;
     Group notePieces;
+    HorizontalGroup solutionSlots;
+    HorizontalGroup topBar;
+
+    public boolean checkSolution(){
+        List<Actor> correctNotePieces = new LinkedList<Actor>();
+        for(int i = 0; i < solutionSlots.getChildren().size; i++){
+            Actor solutionSlot = solutionSlots.getChildren().get(i);
+            if(solutionSlot.getUserObject() == null || !(((Note) solutionSlot.getUserObject()).equals(puzzle.getSolutionNotes().get(i)))) return false;
+        }
+        puzzleStatistics.setEndTime(new Date());
+
+        int popOrder = 0;
+        for(Actor notePiece : notePieces.getChildren()){
+            notePiece.clearListeners();
+            if(!this.puzzle.getSolutionNotes().contains((Note) notePiece.getUserObject())){
+                notePiece.addAction(Actions.sequence(
+                    Actions.delay(++popOrder * 0.1f),
+                    Actions.scaleTo(1.25f, 1.25f, 0.4f),
+                    Actions.scaleTo(0f, 0f, 0.1f),
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.75f, 1.0f);
+                        }
+                    }),
+                    Actions.removeActor()
+                ));
+            }
+        }
+
+        solved = true;
+        assetManager.get("sounds/yay.mp3", Sound.class).play(1.0f);
+        return true;
+    }
+
 
     public GameStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.assetManager = new AssetManager();
+
+        // generate the puzzle
         this.puzzle = new Puzzle(Puzzle.Difficulty.EASY);
 
+        // statistics
+        this.puzzleStatistics = new PuzzleStatistics(this.puzzle);
+
         List<Actor> solutionNoteActors, extraNoteActors;
+
+        // load necessary sound effects
+        assetManager.load("sounds/yay.mp3", Sound.class);
+        assetManager.load("sounds/pop.mp3", Sound.class);
+        assetManager.load("sounds/click.mp3", Sound.class);
 
         // handle solution notes
         solutionNoteActors = new LinkedList<Actor>();
@@ -44,7 +94,7 @@ public class GameStage extends Stage {
             String spriteName;
             if(i == 0){
                 spriteName = "closedmale";
-            }else if(i == this.puzzle.getSolutionNotes().size()){
+            }else if(i == this.puzzle.getSolutionNotes().size() - 1){
                 spriteName = "femaleclosed";
             }else{
                 spriteName = "femalemale";
@@ -156,6 +206,69 @@ public class GameStage extends Stage {
                     actor.toFront();
                     super.drag(event, x, y, pointer);
                 }
+
+                @Override
+                public void dragStart(InputEvent event, float x, float y, int pointer) {
+                    Actor actor = event.getListenerActor();
+                    for(Actor solutionSlot : solutionSlots.getChildren()){
+                        if(solutionSlot.getUserObject() != null && solutionSlot.getUserObject().equals(event.getListenerActor().getUserObject())){
+                            solutionSlot.setUserObject(null);
+                            assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                            actor.addAction(Actions.sequence(Actions.scaleTo(1.25f, 1.25f, 0.075f), Actions.scaleTo(1.0f, 1.0f, 0.075f)));
+                            break;
+                        }
+                    }
+                    super.dragStart(event, x, y, pointer);
+                }
+
+                @Override
+                public void dragStop(InputEvent event, float x, float y, int pointer) {
+                    Actor actor = event.getListenerActor();
+                    final float minDistance = actor.getWidth() * 0.5f;
+                    Actor nearestSolutionSlot = null;
+
+                    for(Actor solutionSlot : solutionSlots.getChildren()){
+                        if(solutionSlot.getUserObject() != null) continue;
+
+                        float distanceToThisSolutionSlot = Vector2.dst(
+                                solutionSlot.localToStageCoordinates(new Vector2()).x,
+                                solutionSlot.localToStageCoordinates(new Vector2()).y,
+                                actor.localToStageCoordinates(new Vector2()).x,
+                                actor.localToStageCoordinates(new Vector2()).y
+                        );
+
+                        if(distanceToThisSolutionSlot <= minDistance){
+                            if(nearestSolutionSlot != null && Vector2.dst(
+                                    actor.localToStageCoordinates(new Vector2()).x,
+                                    actor.localToStageCoordinates(new Vector2()).y,
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).x,
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).y
+                            ) < distanceToThisSolutionSlot){
+                                continue;
+                            }
+                            nearestSolutionSlot = solutionSlot;
+                        }
+                    }
+
+                    if(nearestSolutionSlot != null){
+                        actor.addAction(Actions.sequence(
+                                Actions.moveTo(
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).x,
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).y + nearestSolutionSlot.getHeight() * 0.1f,
+                                    0.05f
+                                ),
+                                Actions.moveTo(
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).x,
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).y,
+                                    0.05f
+                                )
+                        ));
+                        nearestSolutionSlot.setUserObject(actor.getUserObject());
+                        assetManager.get("sounds/click.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                        checkSolution();
+                    }
+                    super.dragStop(event, x, y, pointer);
+                }
             });
 
             notePieceWithLabelGroup.addListener(new ActorGestureListener(){
@@ -164,11 +277,13 @@ public class GameStage extends Stage {
                     Actor actor = event.getListenerActor();
                     Note note = (Note) actor.getUserObject();
                     assetManager.get(String.format("notes/%s.mp3", note.toString()), Sound.class).play(1.0f);
+                    puzzleStatistics.addNotePieceListen();
                     notePieceGroup.addAction(Actions.sequence(Actions.repeat(9, Actions.sequence(
                             Actions.rotateTo(-3f, 0.1f, Interpolation.circle),
                             Actions.rotateTo(3f, 0.1f, Interpolation.circle)
                     )), Actions.rotateTo(0f, 0.2f, Interpolation.circle)));
                     label.addAction(Actions.sequence(Actions.fadeIn(0.05f), Actions.delay(1f), Actions.fadeOut(1f)));
+                    actor.toFront();
                     super.tap(event, x, y, count, button);
                 }
             });
@@ -186,6 +301,61 @@ public class GameStage extends Stage {
 
         // add note pieces
         addActor(this.notePieces);
+
+
+        // solution slots
+        this.solutionSlots = new HorizontalGroup();
+        for(int i = 0; i < this.puzzle.getSolutionNotes().size(); i++){
+            String spriteName;
+            if(i == 0){
+                spriteName = "closedmaleoutline";
+            }else if(i == this.puzzle.getSolutionNotes().size() - 1){
+                spriteName = "femaleclosedoutline";
+            }else{
+                spriteName = "femalemaleoutline";
+            }
+            Image solutionSlot = new Image(DoReMi.sprites.findRegion(spriteName));
+            this.solutionSlots.setHeight(solutionSlot.getHeight());
+            this.solutionSlots.space(solutionSlot.getWidth() * 0.22f * -1);
+            this.solutionSlots.addActor(solutionSlot);
+        }
+
+        // listen button
+        Image listenButton = new Image(DoReMi.sprites.findRegion("listen"));
+        listenButton.addListener(new ActorGestureListener(){
+            @Override
+            public void tap(InputEvent event, float x, float y, int count, int button) {
+                Actor actor = event.getListenerActor();
+                for(int i = 0; i < puzzle.getSolutionNotes().size(); i++){
+                    final int finalI = i;
+                    final String noteToPlay = String.format("notes/%s.mp3", puzzle.getSolutionNotes().get(finalI));
+                    assetManager.load(noteToPlay, Sound.class);
+                    actor.addAction(Actions.delay(0.5f * i, Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            assetManager.get(noteToPlay, Sound.class).play(1.0f);
+                        }
+                    })));
+                }
+                puzzleStatistics.addSolutionListen();
+                super.tap(event, x, y, count, button);
+            }
+        });
+
+        // create top bar
+        topBar = new HorizontalGroup();
+        topBar.setHeight(listenButton.getHeight());
+        topBar.space(listenButton.getWidth() * 0.25f);
+        topBar.addActor(listenButton);
+        topBar.addActor(solutionSlots);
+
+        topBar.setPosition(0, viewport.getWorldHeight() * 0.95f - topBar.getHeight());
+        addActor(topBar);
+        topBar.toBack();
+
+
+        // start the timer
+        puzzleStatistics.setStartTime(new Date());
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -30,7 +31,8 @@ public class DoReMi extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		viewport = new FitViewport(2560, 1440);
+		// viewport = new FitViewport(2560, 1600);
+		viewport = new ExtendViewport(2560, 1600);
 
 		sprites = new TextureAtlas("pack.atlas");
 		assets = new AssetManager();

@@ -12,8 +12,8 @@ public class DesktopLauncher {
 		TexturePacker.process(settings, "images/", ".", "pack");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1280;
-		config.height = 720;
+		config.width = 1440;
+		config.height = 900;
 		new LwjglApplication(new DoReMi(), config);
 	}
 }
