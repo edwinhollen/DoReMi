@@ -1,5 +1,6 @@
 package edu.edwinhollen.doremi;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -36,39 +38,7 @@ public class GameStage extends Stage {
     Group notePieces;
     HorizontalGroup solutionSlots;
     HorizontalGroup topBar;
-
-    public boolean checkSolution(){
-        List<Actor> correctNotePieces = new LinkedList<Actor>();
-        for(int i = 0; i < solutionSlots.getChildren().size; i++){
-            Actor solutionSlot = solutionSlots.getChildren().get(i);
-            if(solutionSlot.getUserObject() == null || !(((Note) solutionSlot.getUserObject()).equals(puzzle.getSolutionNotes().get(i)))) return false;
-        }
-        puzzleStatistics.setEndTime(new Date());
-
-        int popOrder = 0;
-        for(Actor notePiece : notePieces.getChildren()){
-            notePiece.clearListeners();
-            if(!this.puzzle.getSolutionNotes().contains((Note) notePiece.getUserObject())){
-                notePiece.addAction(Actions.sequence(
-                    Actions.delay(++popOrder * 0.1f),
-                    Actions.scaleTo(1.25f, 1.25f, 0.4f),
-                    Actions.scaleTo(0f, 0f, 0.1f),
-                    Actions.run(new Runnable() {
-                        @Override
-                        public void run() {
-                            assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.75f, 1.0f);
-                        }
-                    }),
-                    Actions.removeActor()
-                ));
-            }
-        }
-
-        solved = true;
-        assetManager.get("sounds/yay.mp3", Sound.class).play(1.0f);
-        return true;
-    }
-
+    // Group hornGroupLeft, hornGroupRight, hornGroups;
 
     public GameStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
@@ -86,6 +56,14 @@ public class GameStage extends Stage {
         assetManager.load("sounds/yay.mp3", Sound.class);
         assetManager.load("sounds/pop.mp3", Sound.class);
         assetManager.load("sounds/click.mp3", Sound.class);
+
+        addListener(new InputListener(){
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if(keycode == Input.Keys.F1) endSequence();
+                return super.keyDown(event, keycode);
+            }
+        });
 
         // handle solution notes
         solutionNoteActors = new LinkedList<Actor>();
@@ -164,7 +142,7 @@ public class GameStage extends Stage {
                     break;
                 case B_FLAT:
                 case B_NATURAL:
-                    y = 0.509f;
+                    y = note.getOctave() < 3 ? 0.509f : 0.989f;
             }
 
             y = y - 0.1f;
@@ -214,7 +192,11 @@ public class GameStage extends Stage {
                         if(solutionSlot.getUserObject() != null && solutionSlot.getUserObject().equals(event.getListenerActor().getUserObject())){
                             solutionSlot.setUserObject(null);
                             assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
-                            actor.addAction(Actions.sequence(Actions.scaleTo(1.25f, 1.25f, 0.075f), Actions.scaleTo(1.0f, 1.0f, 0.075f)));
+                            actor.addAction(Actions.sequence(
+                                    Actions.scaleTo(0.9f, 0.35f, 0.01f),
+                                    Actions.scaleTo(1.4f, 1.4f, 0.075f),
+                                    Actions.scaleTo(1.0f, 1.0f, 0.075f))
+                            );
                             break;
                         }
                     }
@@ -254,17 +236,29 @@ public class GameStage extends Stage {
                         actor.addAction(Actions.sequence(
                                 Actions.moveTo(
                                     nearestSolutionSlot.localToStageCoordinates(new Vector2()).x,
-                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).y + nearestSolutionSlot.getHeight() * 0.1f,
-                                    0.05f
+                                    nearestSolutionSlot.localToStageCoordinates(new Vector2()).y + nearestSolutionSlot.getHeight() * 0.25f,
+                                    0.025f
                                 ),
-                                Actions.moveTo(
+                                Actions.parallel(
+                                    Actions.moveTo(
                                     nearestSolutionSlot.localToStageCoordinates(new Vector2()).x,
                                     nearestSolutionSlot.localToStageCoordinates(new Vector2()).y,
-                                    0.05f
+                                    0.075f
+                                    ),
+                                    Actions.sequence(
+                                        Actions.scaleTo(0.75f, 0.35f, 0.075f),
+                                        Actions.scaleTo(1.2f, 1.2f, 0.075f),
+                                        Actions.scaleTo(1.0f, 1.0f, 0.075f)
+                                    ),
+                                    Actions.delay(0.015f, Actions.run(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            assetManager.get("sounds/click.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                                        }
+                                    }))
                                 )
                         ));
                         nearestSolutionSlot.setUserObject(actor.getUserObject());
-                        assetManager.get("sounds/click.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
                         checkSolution();
                     }
                     super.dragStop(event, x, y, pointer);
@@ -376,5 +370,101 @@ public class GameStage extends Stage {
         }
         getBatch().end();
         */
+    }
+
+
+    public void endSequence(){
+        assetManager.get("sounds/yay.mp3", Sound.class).play(1.0f);
+
+        // do the actions
+        // horns and flags
+        Group hornGroups = new Group();
+        hornGroups.setSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
+        Group hornGroupLeft = new Group();
+        Group hornGroupRight = new Group();
+
+        // horn group left
+        Image horn = new Image(DoReMi.sprites.findRegion("horn"));
+        Image flagRoll = new Image(DoReMi.sprites.findRegion("flagroll"));
+        Image flag = new Image(DoReMi.sprites.findRegion("flag"));
+
+        horn.setRotation(38f);
+
+        flagRoll.setOrigin(Align.top);
+        flagRoll.setRotation(28f);
+        flagRoll.setPosition(horn.getWidth() * 0.16f, horn.getHeight() * 1.2f);
+        flagRoll.addAction(Actions.sequence(
+                Actions.delay(1.75f),
+                Actions.scaleTo(1.0f, 0.8f, 0.2f),
+                Actions.fadeOut(0.075f)
+        ));
+
+        flag.setOrigin(Align.top);
+        flag.setRotation(2f);
+        flag.setPosition(horn.getWidth() * 0.20f, horn.getHeight() * - 0.4f);
+        flag.setVisible(false);
+        flag.addAction(Actions.sequence(
+            Actions.delay(1.75f),
+            Actions.scaleTo(1.0f, 0f),
+            Actions.visible(true),
+            Actions.scaleTo(1.0f, 1.4f, 0.1f),
+            Actions.scaleTo(1.0f, 1.0f, 0.1f)
+        ));
+
+        hornGroupLeft.addActor(horn);
+        hornGroupLeft.addActor(flag);
+        hornGroupLeft.addActor(flagRoll);
+
+        hornGroupLeft.setPosition(getViewport().getWorldWidth() * 0.25f, getViewport().getWorldHeight() * 0.5f);
+        hornGroupLeft.setOrigin(Align.left);
+        hornGroupLeft.addAction(Actions.sequence(
+                Actions.delay(0.65f),
+                Actions.scaleTo(1.1f, 1.0f, 0.05f),
+                Actions.delay(0.1f),
+                Actions.scaleTo(1.0f, 1.0f, 0.08f),
+                Actions.scaleTo(1.1f, 1.0f, 0.05f),
+                Actions.delay(0.1f),
+                Actions.scaleTo(1.0f, 1.0f, 0.08f),
+                Actions.scaleTo(1.2f, 1.0f, 0.05f),
+                Actions.delay(0.75f),
+                Actions.scaleTo(1.0f, 1.0f, 0.1f)
+        ));
+
+        hornGroups.addActor(hornGroupLeft);
+        hornGroups.addActor(hornGroupRight);
+
+        addActor(hornGroups);
+    }
+
+    public boolean checkSolution(){
+        List<Actor> correctNotePieces = new LinkedList<Actor>();
+        for(int i = 0; i < solutionSlots.getChildren().size; i++){
+            Actor solutionSlot = solutionSlots.getChildren().get(i);
+            if(solutionSlot.getUserObject() == null || !(((Note) solutionSlot.getUserObject()).equals(puzzle.getSolutionNotes().get(i)))) return false;
+        }
+        puzzleStatistics.setEndTime(new Date());
+
+        int popOrder = 0;
+        for(Actor notePiece : notePieces.getChildren()){
+            notePiece.clearListeners();
+            if(!this.puzzle.getSolutionNotes().contains((Note) notePiece.getUserObject())){
+                notePiece.addAction(Actions.sequence(
+                        Actions.delay(++popOrder * 0.05f),
+                        Actions.scaleTo(1.25f, 1.25f, 0.4f),
+                        Actions.scaleTo(0f, 0f, 0.1f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.75f, 1.0f);
+                            }
+                        }),
+                        Actions.removeActor()
+                ));
+            }
+        }
+
+        solved = true;
+        endSequence();
+        return true;
     }
 }
