@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -38,6 +39,7 @@ public class GameStage extends Stage {
     Group notePieces;
     HorizontalGroup solutionSlots;
     HorizontalGroup topBar;
+    Image listenButton;
     // Group hornGroupLeft, hornGroupRight, hornGroups;
 
     public GameStage(Viewport viewport, Batch batch) {
@@ -56,6 +58,7 @@ public class GameStage extends Stage {
         assetManager.load("sounds/yay.mp3", Sound.class);
         assetManager.load("sounds/pop.mp3", Sound.class);
         assetManager.load("sounds/click.mp3", Sound.class);
+        assetManager.load("sounds/rustle.mp3", Sound.class);
 
         addListener(new InputListener(){
             @Override
@@ -315,8 +318,8 @@ public class GameStage extends Stage {
         }
 
         // listen button
-        Image listenButton = new Image(DoReMi.sprites.findRegion("listen"));
-        listenButton.addListener(new ActorGestureListener(){
+        this.listenButton = new Image(DoReMi.sprites.findRegion("listen"));
+        this.listenButton.addListener(new ActorGestureListener(){
             @Override
             public void tap(InputEvent event, float x, float y, int count, int button) {
                 Actor actor = event.getListenerActor();
@@ -374,7 +377,11 @@ public class GameStage extends Stage {
 
 
     public void endSequence(){
-        assetManager.get("sounds/yay.mp3", Sound.class).play(1.0f);
+        assetManager.get("sounds/yay.mp3", Sound.class).play(0.5f);
+
+        solutionSlots.addAction(Actions.fadeOut(0.5f));
+        notePieces.addAction(Actions.fadeOut(0.5f));
+        listenButton.addAction(Actions.fadeOut(0.5f));
 
         // do the actions
         // horns and flags
@@ -403,6 +410,13 @@ public class GameStage extends Stage {
         flag.setRotation(2f);
         flag.setPosition(horn.getWidth() * 0.20f, horn.getHeight() * - 0.4f);
         flag.setVisible(false);
+        flag.addAction(Actions.delay(1.3f, Actions.run(new Runnable() {
+                   @Override
+                   public void run() {
+                       assetManager.get("sounds/rustle.mp3", Sound.class).play();
+                   }
+               }
+        )));
         flag.addAction(Actions.sequence(
             Actions.delay(1.75f),
             Actions.scaleTo(1.0f, 0f),
@@ -430,10 +444,41 @@ public class GameStage extends Stage {
                 Actions.scaleTo(1.0f, 1.0f, 0.1f)
         ));
 
+        // horn group right
+
         hornGroups.addActor(hornGroupLeft);
         hornGroups.addActor(hornGroupRight);
 
-        addActor(hornGroups);
+        // addActor(hornGroups);
+
+        // confetti
+        Group confettiGroup = new Group();
+        for(int i = 0; i < 15; i++){
+            Image confetti = new Image(DoReMi.sprites.findRegion(Pick.pick(new String[]{"confetti1", "confetti2", "confetti3", "confetti4"})));
+            confetti.setPosition(getViewport().getWorldWidth() / 2, getViewport().getWorldHeight() / 2);
+            confetti.setAlign(Align.center);
+            confetti.setColor(Color.valueOf(Pick.pick(Chromatic.values()).getColor()));
+            confetti.setScale(0.5f);
+            confetti.setRotation(Pick.integer(0, 360));
+            confetti.addAction(Actions.sequence(
+                    Actions.alpha(0f),
+                    Actions.delay(2f),
+                    Actions.alpha(1f, 0.03f),
+                    Actions.moveBy(
+                            Pick.integer(0, (int) (getViewport().getWorldWidth() * 0.4f)) * (Pick.bool() ? -1 : 1),
+                            Pick.integer(0, (int) (getViewport().getWorldHeight() * 0.5f)),
+                            0.25f,
+                            Interpolation.sineOut
+                    ),
+                    Actions.parallel(
+                        Actions.rotateBy(Pick.integer(-45, 45), 4f),
+                        Actions.moveBy(0, getViewport().getWorldHeight() * 0.25f * -1 * Pick.integer(50, 100) / 100, 4f),
+                        Actions.delay(3.5f, Actions.fadeOut(0.5f))
+                    )
+            ));
+            confettiGroup.addActor(confetti);
+        }
+        addActor(confettiGroup);
     }
 
     public boolean checkSolution(){
@@ -444,24 +489,7 @@ public class GameStage extends Stage {
         }
         puzzleStatistics.setEndTime(new Date());
 
-        int popOrder = 0;
-        for(Actor notePiece : notePieces.getChildren()){
-            notePiece.clearListeners();
-            if(!this.puzzle.getSolutionNotes().contains((Note) notePiece.getUserObject())){
-                notePiece.addAction(Actions.sequence(
-                        Actions.delay(++popOrder * 0.05f),
-                        Actions.scaleTo(1.25f, 1.25f, 0.4f),
-                        Actions.scaleTo(0f, 0f, 0.1f),
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.75f, 1.0f);
-                            }
-                        }),
-                        Actions.removeActor()
-                ));
-            }
-        }
+
 
         solved = true;
         endSequence();

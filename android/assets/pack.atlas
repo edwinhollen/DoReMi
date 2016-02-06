@@ -4,58 +4,79 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+confetti1
+  rotate: false
+  xy: 910, 618
+  size: 60, 128
+  orig: 60, 128
+  offset: 0, 0
+  index: -1
+confetti2
+  rotate: false
+  xy: 628, 104
+  size: 211, 128
+  orig: 211, 128
+  offset: 0, 0
+  index: -1
+confetti4
+  rotate: false
+  xy: 841, 104
+  size: 176, 128
+  orig: 176, 128
+  offset: 0, 0
+  index: -1
 femalemale
   rotate: false
-  xy: 329, 196
+  xy: 329, 234
   size: 579, 512
   orig: 579, 512
   offset: 0, 0
   index: -1
 flag
   rotate: false
-  xy: 2, 135
+  xy: 2, 173
   size: 325, 573
   orig: 325, 573
   offset: 0, 0
   index: -1
 flagroll
   rotate: false
-  xy: 2, 27
+  xy: 2, 65
   size: 394, 106
   orig: 394, 106
   offset: 0, 0
   index: -1
 flat
   rotate: false
-  xy: 398, 2
+  xy: 398, 40
   size: 113, 192
   orig: 113, 192
   offset: 0, 0
   index: -1
 horn
   rotate: false
-  xy: 2, 710
+  xy: 2, 748
   size: 977, 273
   orig: 977, 273
   offset: 0, 0
   index: -1
 notehead
   rotate: false
-  xy: 628, 94
+  xy: 628, 2
   size: 191, 100
   orig: 191, 100
   offset: 0, 0
   index: -1
 noteheadwithline
   rotate: false
-  xy: 821, 94
+  xy: 821, 2
   size: 191, 100
   orig: 191, 100
   offset: 0, 0
   index: -1
 sharp
   rotate: false
-  xy: 513, 2
+  xy: 513, 40
   size: 113, 192
   orig: 113, 192
   offset: 0, 0
@@ -66,9 +87,16 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-femalemaleoutline
+confetti3
   rotate: false
   xy: 2, 2
+  size: 169, 128
+  orig: 169, 128
+  offset: 0, 0
+  index: -1
+femalemaleoutline
+  rotate: false
+  xy: 2, 132
   size: 577, 512
   orig: 577, 512
   offset: 0, 0
