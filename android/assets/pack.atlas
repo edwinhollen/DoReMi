@@ -6,79 +6,86 @@ filter: Nearest,Nearest
 repeat: none
 confetti1
   rotate: false
-  xy: 910, 618
+  xy: 940, 763
   size: 60, 128
   orig: 60, 128
   offset: 0, 0
   index: -1
-confetti2
+confetti3
   rotate: false
-  xy: 628, 104
-  size: 211, 128
-  orig: 211, 128
+  xy: 825, 569
+  size: 169, 128
+  orig: 169, 128
   offset: 0, 0
   index: -1
 confetti4
   rotate: false
-  xy: 841, 104
+  xy: 825, 893
   size: 176, 128
   orig: 176, 128
   offset: 0, 0
   index: -1
 femalemale
   rotate: false
-  xy: 329, 234
+  xy: 2, 509
   size: 579, 512
   orig: 579, 512
   offset: 0, 0
   index: -1
-flag
-  rotate: false
-  xy: 2, 173
-  size: 325, 573
-  orig: 325, 573
-  offset: 0, 0
-  index: -1
 flagroll
   rotate: false
-  xy: 2, 65
+  xy: 418, 126
   size: 394, 106
   orig: 394, 106
   offset: 0, 0
   index: -1
 flat
   rotate: false
-  xy: 398, 40
+  xy: 825, 699
   size: 113, 192
   orig: 113, 192
   offset: 0, 0
   index: -1
 horn
   rotate: false
-  xy: 2, 748
+  xy: 2, 234
   size: 977, 273
   orig: 977, 273
   offset: 0, 0
   index: -1
+info
+  rotate: false
+  xy: 583, 509
+  size: 240, 512
+  orig: 240, 512
+  offset: 0, 0
+  index: -1
 notehead
   rotate: false
-  xy: 628, 2
+  xy: 2, 2
   size: 191, 100
   orig: 191, 100
   offset: 0, 0
   index: -1
 noteheadwithline
   rotate: false
-  xy: 821, 2
+  xy: 195, 2
   size: 191, 100
   orig: 191, 100
   offset: 0, 0
   index: -1
 sharp
   rotate: false
-  xy: 513, 40
+  xy: 814, 40
   size: 113, 192
   orig: 113, 192
+  offset: 0, 0
+  index: -1
+wrench
+  rotate: false
+  xy: 2, 104
+  size: 414, 128
+  orig: 414, 128
   offset: 0, 0
   index: -1
 
@@ -87,11 +94,11 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-confetti3
+confetti2
   rotate: false
   xy: 2, 2
-  size: 169, 128
-  orig: 169, 128
+  size: 211, 128
+  orig: 211, 128
   offset: 0, 0
   index: -1
 femalemaleoutline
@@ -99,6 +106,13 @@ femalemaleoutline
   xy: 2, 132
   size: 577, 512
   orig: 577, 512
+  offset: 0, 0
+  index: -1
+flag
+  rotate: false
+  xy: 581, 71
+  size: 325, 573
+  orig: 325, 573
   offset: 0, 0
   index: -1
 
@@ -112,6 +126,13 @@ closedmale
   xy: 2, 2
   size: 570, 512
   orig: 570, 512
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 574, 2
+  size: 445, 512
+  orig: 445, 512
   offset: 0, 0
   index: -1
 
@@ -135,20 +156,33 @@ filter: Nearest,Nearest
 repeat: none
 femaleclosed
   rotate: false
-  xy: 514, 2
+  xy: 2, 2
   size: 507, 512
   orig: 507, 512
   offset: 0, 0
   index: -1
 femaleclosedoutline
   rotate: false
-  xy: 2, 2
+  xy: 511, 2
   size: 510, 512
   orig: 510, 512
   offset: 0, 0
   index: -1
 
 pack6.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+stats
+  rotate: false
+  xy: 2, 2
+  size: 531, 512
+  orig: 531, 512
+  offset: 0, 0
+  index: -1
+
+pack7.png
 size: 512,1024
 format: RGBA8888
 filter: Nearest,Nearest
