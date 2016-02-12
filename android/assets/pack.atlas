@@ -94,29 +94,56 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+blank
+  rotate: false
+  xy: 485, 408
+  size: 506, 512
+  orig: 506, 512
+  offset: 0, 0
+  index: -1
 confetti2
   rotate: false
-  xy: 2, 2
+  xy: 2, 792
   size: 211, 128
   orig: 211, 128
   offset: 0, 0
   index: -1
+ear
+  rotate: false
+  xy: 215, 516
+  size: 268, 404
+  orig: 268, 404
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 2, 2
+  size: 445, 512
+  orig: 445, 512
+  offset: 0, 0
+  index: -1
+
+pack3.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
 femalemaleoutline
   rotate: false
-  xy: 2, 132
+  xy: 2, 63
   size: 577, 512
   orig: 577, 512
   offset: 0, 0
   index: -1
 flag
   rotate: false
-  xy: 581, 71
+  xy: 581, 2
   size: 325, 573
   orig: 325, 573
   offset: 0, 0
   index: -1
 
-pack3.png
+pack4.png
 size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
@@ -128,15 +155,8 @@ closedmale
   orig: 570, 512
   offset: 0, 0
   index: -1
-play
-  rotate: false
-  xy: 574, 2
-  size: 445, 512
-  orig: 445, 512
-  offset: 0, 0
-  index: -1
 
-pack4.png
+pack5.png
 size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
@@ -149,7 +169,7 @@ closedmaleoutline
   offset: 0, 0
   index: -1
 
-pack5.png
+pack6.png
 size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
@@ -169,7 +189,7 @@ femaleclosedoutline
   offset: 0, 0
   index: -1
 
-pack6.png
+pack7.png
 size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
@@ -182,7 +202,7 @@ stats
   offset: 0, 0
   index: -1
 
-pack7.png
+pack8.png
 size: 512,1024
 format: RGBA8888
 filter: Nearest,Nearest

@@ -37,9 +37,9 @@ public class DoReMi extends ApplicationAdapter {
 		sprites = new TextureAtlas("pack.atlas");
 		assets = new AssetManager();
 
-		font = new BitmapFont(Gdx.files.internal("fonts/font_black.fnt"));
+		font = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
 
-		changeStage(GameStage.class);
+		changeStage(TitleStage.class);
 	}
 
 	@Override
