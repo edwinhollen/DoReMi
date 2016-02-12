@@ -51,20 +51,22 @@ public class TitleStage extends Stage {
         {
             Image playIcon = new Image(DoReMi.sprites.findRegion("play"));
             playIcon.setOrigin(Align.center);
-            playIcon.setAlign(Align.center);
-            playIcon.setPosition(playGroup.getWidth() / 2 - playIcon.getWidth() / 2, playGroup.getHeight() / 2 - playIcon.getWidth() / 2);
+            // playIcon.setAlign(Align.center);
+            playIcon.setPosition(playGroup.getWidth() / 2 - playIcon.getWidth() / 2, playGroup.getHeight() / 2 - playIcon.getHeight() / 2);
             playGroup.addActor(playIcon);
         }
 
         {
             Image optionsIcon = new Image(DoReMi.sprites.findRegion("wrench"));
             optionsIcon.setOrigin(Align.center);
-            optionsIcon.setRotation(45f);
+            optionsIcon.setScale(1.3f);
+            optionsIcon.setPosition(optionsGroup.getWidth() / 2 - optionsIcon.getWidth() / 2, optionsGroup.getHeight() / 2 - optionsIcon.getHeight() / 2);
             optionsGroup.addActor(optionsIcon);
         }
 
         {
             Image infoIcon = new Image(DoReMi.sprites.findRegion("info"));
+            infoIcon.setPosition(infoGroup.getWidth() / 2 - infoIcon.getWidth() / 2, infoGroup.getHeight() / 2 - infoIcon.getHeight() / 2);
             infoGroup.addActor(infoIcon);
         }
 
