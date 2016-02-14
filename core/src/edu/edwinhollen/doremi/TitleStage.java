@@ -4,8 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
@@ -21,12 +25,17 @@ public class TitleStage extends Stage {
 
     // asset descriptions
     private AssetDescriptor<Music> warmupMusic;
+    private AssetDescriptor<Sound> pop;
 
     public TitleStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.assetManager = new AssetManager();
         this.warmupMusic = new AssetDescriptor<Music>("sounds/warmup.mp3", Music.class);
         assetManager.load(warmupMusic);
+
+        this.pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
+        assetManager.load(this.pop);
+
         Group playGroup = new Group(),
                 optionsGroup = new Group(),
                 infoGroup = new Group(),
@@ -87,6 +96,43 @@ public class TitleStage extends Stage {
         menuItems.setHeight(menuItems.getChildren().get(0).getHeight());
         for(Actor a : menuItems.getChildren()){
             menuItems.setSize(menuItems.getWidth() + a.getWidth(), menuItems.getHeight());
+        }
+
+        for(int i = 0; i < menuItems.getChildren().size; i++){
+            Actor a = menuItems.getChildren().get(i);
+            a.addAction(Actions.sequence(
+                    Actions.delay(0.5f + i * 0.5f),
+                    Actions.moveBy(0, a.getHeight() * 0.1f, 0.1f, Interpolation.sine),
+                    Actions.moveBy(0, -(a.getHeight() * 0.1f), 0.1f, Interpolation.sine)
+            ));
+            a.setOrigin(Align.center);
+            a.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    event.getListenerActor().addAction(Actions.sequence(
+                            Actions.parallel(
+                                    Actions.scaleTo(0.5f, 0.5f, 0.1f),
+                                    Actions.run(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            assetManager.get(pop).play(0.75f, 0.5f, 1.0f);
+                                        }
+                                    })
+                            ),
+                            Actions.parallel(
+                                Actions.run(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        assetManager.get(pop).play(1.0f);
+                                    }
+                                }),
+                                Actions.scaleBy(5f, 5f, 0.25f, Interpolation.sineIn),
+                                Actions.fadeOut(0.25f, Interpolation.sineIn)
+                            )
+                    ));
+                    super.tap(event, x, y, count, button);
+                }
+            });
         }
 
         this.menuItems.setPosition(viewport.getWorldWidth() / 2f - this.menuItems.getWidth() / 2, viewport.getWorldHeight() / 2f);
