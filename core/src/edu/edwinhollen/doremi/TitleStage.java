@@ -5,11 +5,10 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -28,8 +27,6 @@ public class TitleStage extends Stage {
         this.assetManager = new AssetManager();
         this.warmupMusic = new AssetDescriptor<Music>("sounds/warmup.mp3", Music.class);
         assetManager.load(warmupMusic);
-
-        Image blank = new Image(DoReMi.sprites.findRegion("blank"));
         Group playGroup = new Group(),
                 optionsGroup = new Group(),
                 infoGroup = new Group(),
@@ -41,41 +38,53 @@ public class TitleStage extends Stage {
         this.menuItems.addActor(infoGroup);
         this.menuItems.addActor(statsGroup);
 
-        setDebugAll(true);
-
         for(Actor a : menuItems.getChildren()){
+            Image blank = new Image(DoReMi.sprites.findRegion("blank"));
             ((Group) a).setSize(blank.getWidth(), blank.getHeight());
-            ((Group) a).addActor(blank);
+            // ((Group) a).addActor(blank);
         }
 
         {
             Image playIcon = new Image(DoReMi.sprites.findRegion("play"));
             playIcon.setOrigin(Align.center);
-            // playIcon.setAlign(Align.center);
+            playIcon.setScale(0.8f);
             playIcon.setPosition(playGroup.getWidth() / 2 - playIcon.getWidth() / 2, playGroup.getHeight() / 2 - playIcon.getHeight() / 2);
             playGroup.addActor(playIcon);
+
+            playGroup.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    DoReMi.changeStage(GameStage.class);
+                    super.tap(event, x, y, count, button);
+                }
+            });
         }
 
         {
             Image optionsIcon = new Image(DoReMi.sprites.findRegion("wrench"));
             optionsIcon.setOrigin(Align.center);
-            optionsIcon.setScale(1.3f);
+            optionsIcon.setScale(1.15f);
             optionsIcon.setPosition(optionsGroup.getWidth() / 2 - optionsIcon.getWidth() / 2, optionsGroup.getHeight() / 2 - optionsIcon.getHeight() / 2);
             optionsGroup.addActor(optionsIcon);
         }
 
         {
             Image infoIcon = new Image(DoReMi.sprites.findRegion("info"));
+            infoIcon.setOrigin(Align.center);
+            infoIcon.setScale(0.85f);
             infoIcon.setPosition(infoGroup.getWidth() / 2 - infoIcon.getWidth() / 2, infoGroup.getHeight() / 2 - infoIcon.getHeight() / 2);
             infoGroup.addActor(infoIcon);
         }
 
         {
             Image statsIcon = new Image(DoReMi.sprites.findRegion("stats"));
+            statsIcon.setOrigin(Align.center);
+            statsIcon.setScale(0.75f);
+            statsIcon.setPosition(statsGroup.getWidth() / 2 - statsIcon.getWidth() / 2, statsGroup.getHeight() / 2 - statsIcon.getHeight() / 2);
             statsGroup.addActor(statsIcon);
         }
 
-        menuItems.setHeight(blank.getHeight());
+        menuItems.setHeight(menuItems.getChildren().get(0).getHeight());
         for(Actor a : menuItems.getChildren()){
             menuItems.setSize(menuItems.getWidth() + a.getWidth(), menuItems.getHeight());
         }

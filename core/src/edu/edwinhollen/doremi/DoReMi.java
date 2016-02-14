@@ -8,15 +8,18 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class DoReMi extends ApplicationAdapter {
@@ -31,7 +34,6 @@ public class DoReMi extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		// viewport = new FitViewport(2560, 1600);
 		viewport = new ExtendViewport(2560, 1600);
 
 		sprites = new TextureAtlas("pack.atlas");
@@ -59,13 +61,10 @@ public class DoReMi extends ApplicationAdapter {
 		super.resize(width, height);
 	}
 
-	public static void changeStage(Class<? extends Stage> newStageClass){
+	public static void changeStage(final Class<? extends Stage> newStageClass){
+		Stage newStage = null;
 		try {
-			if(currentStage != null){
-				currentStage.dispose();
-			}
-			currentStage = newStageClass.getConstructor(Viewport.class, Batch.class).newInstance(viewport, batch);
-			Gdx.input.setInputProcessor(currentStage);
+			newStage = newStageClass.getConstructor(Viewport.class, Batch.class).newInstance(viewport, batch);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -75,6 +74,34 @@ public class DoReMi extends ApplicationAdapter {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
+		final float fade = 0.5f;
+		if(currentStage != null){
+			final Stage finalNewStage = newStage;
+			currentStage.addAction(Actions.sequence(
+				Actions.fadeOut(fade),
+				Actions.run(new Runnable() {
+					@Override
+					public void run() {
+						currentStage.dispose();
+						currentStage = null;
+						openNewStage(finalNewStage);
+					}
+				})
+			));
+		}else{
+			openNewStage(newStage);
+		}
+	}
+
+	public static void openNewStage(Stage newStage){
+		newStage.getRoot().setColor(Color.CLEAR);
+		newStage.addAction(Actions.sequence(
+				Actions.delay(0.25f),
+				Actions.fadeIn(0.5f)
+		));
+		Gdx.input.setInputProcessor(newStage);
+
+		currentStage = newStage;
 	}
 
 	@Override
