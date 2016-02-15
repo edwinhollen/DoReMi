@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -135,9 +136,24 @@ public class TitleStage extends Stage {
             });
         }
 
-        this.menuItems.setPosition(viewport.getWorldWidth() / 2f - this.menuItems.getWidth() / 2, viewport.getWorldHeight() / 2f);
+        this.menuItems.setPosition(viewport.getWorldWidth() / 2f - this.menuItems.getWidth() / 2, viewport.getWorldHeight() * 0.1f);
 
         addActor(menuItems);
+
+
+        // logo
+        Group logoGroup = new Group();
+        logoGroup.setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
+        {
+            AssetDescriptor<Texture> logoImage = new AssetDescriptor<Texture>(Gdx.files.internal("bigimages/logosingle.png"), Texture.class);
+            assetManager.load(logoImage);
+            assetManager.finishLoadingAsset(logoImage.fileName);
+            Image logo = new Image(assetManager.get(logoImage));
+            logo.setPosition(logoGroup.getWidth() * 0.5f - logo.getWidth() * 0.5f, logoGroup.getHeight() * 0.90f - logo.getHeight());
+            logoGroup.addActor(logo);
+        }
+
+        addActor(logoGroup);
     }
 
     @Override
