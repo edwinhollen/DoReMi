@@ -153,6 +153,22 @@ public class TitleStage extends Stage {
             Image logo = new Image(assetManager.get(logoImage));
             logo.setPosition(logoGroup.getWidth() * 0.5f - logo.getWidth() * 0.5f, logoGroup.getHeight() * 0.90f - logo.getHeight());
             logoGroup.addActor(logo);
+
+
+            // handle cute little note parts
+            float baseX = logo.getX() + logo.getWidth() * 0.5f;
+            float baseY = logo.getY() + logo.getHeight() * 0.5f;
+            Image[] logoNotes = new Image[7];
+            for(int i = 0; i < logoNotes.length; i++){
+                Image logoNote = new Image(DoReMi.sprites.findRegion(String.format("logonote%d", i + 1)));
+                logoNotes[i] = logoNote;
+            }
+            logoNotes[0].setPosition(baseX - logo.getWidth() * -0.85f, baseY - logo.getHeight() * -0.85f);
+
+
+            for(Image img : logoNotes){
+                // logoGroup.addActor(img);
+            }
         }
 
         addActor(logoGroup);
