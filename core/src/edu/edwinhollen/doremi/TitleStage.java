@@ -50,7 +50,7 @@ public class TitleStage extends Stage {
 
         for(Actor a : menuItems.getChildren()){
             Image blank = new Image(DoReMi.sprites.findRegion("blank"));
-            ((Group) a).setSize(blank.getWidth(), blank.getHeight());
+            a.setBounds(0, 0, blank.getWidth(), blank.getHeight());
             // ((Group) a).addActor(blank);
         }
 
@@ -99,6 +99,7 @@ public class TitleStage extends Stage {
             menuItems.setSize(menuItems.getWidth() + a.getWidth(), menuItems.getHeight());
         }
 
+
         for(int i = 0; i < menuItems.getChildren().size; i++){
             Actor a = menuItems.getChildren().get(i);
             a.addAction(Actions.sequence(
@@ -136,6 +137,7 @@ public class TitleStage extends Stage {
             });
         }
 
+
         this.menuItems.setPosition(viewport.getWorldWidth() / 2f - this.menuItems.getWidth() / 2, viewport.getWorldHeight() * 0.1f);
 
         addActor(menuItems);
@@ -154,6 +156,9 @@ public class TitleStage extends Stage {
         }
 
         addActor(logoGroup);
+
+        logoGroup.setZIndex(0);
+        menuItems.setZIndex(1);
     }
 
     @Override

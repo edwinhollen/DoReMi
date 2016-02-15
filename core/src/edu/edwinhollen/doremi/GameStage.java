@@ -346,7 +346,7 @@ public class GameStage extends Stage {
         topBar.addActor(listenButton);
         topBar.addActor(solutionSlots);
 
-        topBar.setPosition(0, viewport.getWorldHeight() * 0.95f - topBar.getHeight());
+        topBar.setPosition(viewport.getWorldWidth() * 0.052f, viewport.getWorldHeight() * 0.95f - topBar.getHeight());
         addActor(topBar);
         topBar.toBack();
 
