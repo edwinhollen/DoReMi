@@ -191,6 +191,7 @@ public class GameStage extends Stage {
                 @Override
                 public void dragStart(InputEvent event, float x, float y, int pointer) {
                     Actor actor = event.getListenerActor();
+                    actor.addAction(Actions.scaleTo(1.2f, 1.2f, 0.1f));
                     for(Actor solutionSlot : solutionSlots.getChildren()){
                         if(solutionSlot.getUserObject() != null && solutionSlot.getUserObject().equals(event.getListenerActor().getUserObject())){
                             solutionSlot.setUserObject(null);
@@ -211,6 +212,8 @@ public class GameStage extends Stage {
                     Actor actor = event.getListenerActor();
                     final float minDistance = actor.getWidth() * 0.5f;
                     Actor nearestSolutionSlot = null;
+
+                    actor.addAction(Actions.scaleTo(1f, 1f, 0.1f));
 
                     for(Actor solutionSlot : solutionSlots.getChildren()){
                         if(solutionSlot.getUserObject() != null) continue;
@@ -384,6 +387,7 @@ public class GameStage extends Stage {
         listenButton.addAction(Actions.fadeOut(0.5f));
 
         // do the actions
+        /*
         // horns and flags
         Group hornGroups = new Group();
         hornGroups.setSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
@@ -450,6 +454,7 @@ public class GameStage extends Stage {
         hornGroups.addActor(hornGroupRight);
 
         // addActor(hornGroups);
+        */
 
         // confetti
         Group confettiGroup = new Group();

@@ -44,3 +44,17 @@ task afterEclipseImport(description: "Post processing after project generation",
     printer.print(classpath)
   }
 }
+
+project.ext{
+    mainClassName = "edu.edwinhollen.doremi.desktop.DesktopLauncher"
+    assetsDir = new File("../android/assets/images")
+    texturePacker = ['../android/assets/images/', '../android/assets', 'pack']
+}
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+task texturePacker << {
+    if (project.ext.has('texturePacker')) {
+        logger.info "Calling TexturePacker: "+texturePacker
+        TexturePacker.process(texturePacker[0], texturePacker[1], texturePacker[2])
+    }
+}

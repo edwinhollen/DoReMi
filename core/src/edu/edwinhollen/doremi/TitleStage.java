@@ -37,6 +37,8 @@ public class TitleStage extends Stage {
         this.pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
         assetManager.load(this.pop);
 
+        setDebugAll(true);
+
         Group playGroup = new Group(),
                 optionsGroup = new Group(),
                 infoGroup = new Group(),
@@ -156,8 +158,8 @@ public class TitleStage extends Stage {
 
 
             // handle cute little note parts
-            float baseX = logo.getX() + logo.getWidth() * 0.5f;
-            float baseY = logo.getY() + logo.getHeight() * 0.5f;
+            float baseX = logoGroup.getX() + logoGroup.getWidth() * 0.5f;
+            float baseY = logoGroup.getY() + logoGroup.getHeight() * 0.5f;
             Image[] logoNotes = new Image[7];
             for(int i = 0; i < logoNotes.length; i++){
                 Image logoNote = new Image(DoReMi.sprites.findRegion(String.format("logonote%d", i + 1)));
