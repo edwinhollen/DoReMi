@@ -2,6 +2,7 @@ package edu.edwinhollen.doremi;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
@@ -25,6 +26,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class DoReMi extends ApplicationAdapter {
 	static SpriteBatch batch;
@@ -32,6 +35,7 @@ public class DoReMi extends ApplicationAdapter {
 	static Stage currentStage;
 	static TextureAtlas sprites;
 	static BitmapFont font;
+	static Preferences preferences;
 
 	static AssetManager assets;
 
@@ -44,6 +48,19 @@ public class DoReMi extends ApplicationAdapter {
 		assets = new AssetManager();
 
 		font = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
+
+		preferences = Gdx.app.getPreferences("DoReMi");
+
+		// set up preferences
+		if(!preferences.contains("difficulty") || !Arrays.asList(Puzzle.Difficulty.values()).contains(preferences.getString("difficulty"))){
+			preferences.putString("difficulty", Puzzle.Difficulty.values()[0].toString());
+		}
+
+		if(!preferences.contains("user_id")){
+			preferences.putString("user_id", UUID.randomUUID().toString());
+		}
+
+		preferences.flush();
 
 		changeStage(OptionsStage.class);
 	}

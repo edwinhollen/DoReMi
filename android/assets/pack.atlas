@@ -108,30 +108,30 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-back
+femalemale
   rotate: false
-  xy: 2, 2
-  size: 512, 475
-  orig: 512, 475
-  offset: 0, 0
-  index: -1
-femaleclosedoutline
-  rotate: false
-  xy: 516, 16
-  size: 459, 461
-  orig: 459, 461
+  xy: 2, 20
+  size: 521, 461
+  orig: 521, 461
   offset: 0, 0
   index: -1
 play
   rotate: false
-  xy: 535, 479
+  xy: 535, 483
   size: 445, 512
   orig: 445, 512
   offset: 0, 0
   index: -1
+plus
+  rotate: false
+  xy: 525, 2
+  size: 475, 479
+  orig: 475, 479
+  offset: 0, 0
+  index: -1
 stats
   rotate: false
-  xy: 2, 479
+  xy: 2, 483
   size: 531, 512
   orig: 531, 512
   offset: 0, 0
@@ -142,32 +142,32 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-femaleclosed
-  rotate: false
-  xy: 525, 465
-  size: 456, 461
-  orig: 456, 461
-  offset: 0, 0
-  index: -1
-femaleclosed-biglines
-  rotate: false
-  xy: 525, 2
-  size: 456, 461
-  orig: 456, 461
-  offset: 0, 0
-  index: -1
-femalemale
-  rotate: false
-  xy: 2, 465
-  size: 521, 461
-  orig: 521, 461
-  offset: 0, 0
-  index: -1
-femalemale-biglines
+closedmale
   rotate: false
   xy: 2, 2
-  size: 521, 461
-  orig: 521, 461
+  size: 513, 461
+  orig: 513, 461
+  offset: 0, 0
+  index: -1
+femaleclosedoutline
+  rotate: false
+  xy: 523, 465
+  size: 459, 461
+  orig: 459, 461
+  offset: 0, 0
+  index: -1
+femalemaleoutline
+  rotate: false
+  xy: 2, 465
+  size: 519, 461
+  orig: 519, 461
+  offset: 0, 0
+  index: -1
+minus
+  rotate: false
+  xy: 517, 2
+  size: 457, 461
+  orig: 457, 461
   offset: 0, 0
   index: -1
 
@@ -178,28 +178,35 @@ filter: Nearest,Nearest
 repeat: none
 blank
   rotate: false
-  xy: 523, 465
+  xy: 515, 465
   size: 455, 461
   orig: 455, 461
   offset: 0, 0
   index: -1
-closedmale
-  rotate: false
-  xy: 2, 2
-  size: 513, 461
-  orig: 513, 461
-  offset: 0, 0
-  index: -1
-femalemaleoutline
+closedmaleoutline
   rotate: false
   xy: 2, 465
-  size: 519, 461
-  orig: 519, 461
+  size: 511, 461
+  orig: 511, 461
+  offset: 0, 0
+  index: -1
+confetti1
+  rotate: false
+  xy: 917, 335
+  size: 60, 128
+  orig: 60, 128
+  offset: 0, 0
+  index: -1
+femaleclosed
+  rotate: false
+  xy: 2, 2
+  size: 456, 461
+  orig: 456, 461
   offset: 0, 0
   index: -1
 listen
   rotate: false
-  xy: 517, 2
+  xy: 460, 2
   size: 455, 461
   orig: 455, 461
   offset: 0, 0
@@ -210,79 +217,59 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-closedmale-biglines
+back
   rotate: false
-  xy: 2, 476
-  size: 513, 461
-  orig: 513, 461
-  offset: 0, 0
-  index: -1
-closedmaleoutline
-  rotate: false
-  xy: 2, 13
-  size: 511, 461
-  orig: 511, 461
-  offset: 0, 0
-  index: -1
-confetti1
-  rotate: false
-  xy: 686, 104
-  size: 60, 128
-  orig: 60, 128
+  xy: 329, 519
+  size: 453, 341
+  orig: 453, 341
   offset: 0, 0
   index: -1
 confetti2
   rotate: false
-  xy: 515, 234
+  xy: 784, 732
   size: 211, 128
   orig: 211, 128
   offset: 0, 0
   index: -1
 confetti3
   rotate: false
-  xy: 515, 104
+  xy: 571, 389
   size: 169, 128
   orig: 169, 128
   offset: 0, 0
   index: -1
 confetti4
   rotate: false
-  xy: 844, 809
+  xy: 2, 157
   size: 176, 128
   orig: 176, 128
   offset: 0, 0
   index: -1
 flag
   rotate: false
-  xy: 517, 364
+  xy: 2, 287
   size: 325, 573
   orig: 325, 573
   offset: 0, 0
   index: -1
+info
+  rotate: false
+  xy: 329, 5
+  size: 240, 512
+  orig: 240, 512
+  offset: 0, 0
+  index: -1
 logonote1
   rotate: false
-  xy: 844, 654
+  xy: 2, 2
   size: 110, 153
   orig: 110, 153
   offset: 0, 0
   index: -1
 noteheadwithline
   rotate: false
-  xy: 515, 2
+  xy: 784, 630
   size: 191, 100
   orig: 191, 100
-  offset: 0, 0
-  index: -1
-
-pack6.png
-size: 256,1024
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-info
-  rotate: false
-  xy: 2, 2
-  size: 240, 512
-  orig: 240, 512
   offset: 0, 0
   index: -1

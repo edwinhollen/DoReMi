@@ -26,7 +26,7 @@ public class TitleStage extends Stage {
 
     // asset descriptions
     private AssetDescriptor<Music> warmupMusic;
-    private AssetDescriptor<Sound> pop;
+    private AssetDescriptor<Sound> pop, rustle;
 
     public TitleStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
@@ -36,6 +36,9 @@ public class TitleStage extends Stage {
 
         this.pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
         assetManager.load(this.pop);
+
+        this.rustle = new AssetDescriptor<Sound>("sounds/rustle.mp3", Sound.class);
+        assetManager.load(this.rustle);
 
         setDebugAll(false);
 
@@ -113,7 +116,13 @@ public class TitleStage extends Stage {
         for(int i = 0; i < menuItems.getChildren().size; i++){
             Actor a = menuItems.getChildren().get(i);
             a.addAction(Actions.sequence(
-                    Actions.delay(0.5f + i * 0.5f),
+                    Actions.delay(0.25f + i * 0.25f),
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            assetManager.get(rustle).play(0.5f, (float) Pick.integer(175, 250) / 100f, 1.0f);
+                        }
+                    }),
                     Actions.moveBy(0, a.getHeight() * 0.1f, 0.1f, Interpolation.sine),
                     Actions.moveBy(0, -(a.getHeight() * 0.1f), 0.1f, Interpolation.sine)
             ));

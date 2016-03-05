@@ -85,8 +85,15 @@ public class Puzzle {
     }
 
     enum Difficulty{
-        EASY,
-        MEDIUM,
-        HARD
+        EASY("Major arpeggio puzzles"),
+        MEDIUM("Major and minor arpeggio puzzles"),
+        HARD("Chromatic puzzles");
+        final private String description;
+        Difficulty(String description){
+            this.description = description;
+        }
+        public String getDescription(){
+            return this.description;
+        }
     }
 }
