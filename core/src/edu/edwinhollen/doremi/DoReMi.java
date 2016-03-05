@@ -12,8 +12,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -41,7 +45,7 @@ public class DoReMi extends ApplicationAdapter {
 
 		font = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
 
-		changeStage(TitleStage.class);
+		changeStage(OptionsStage.class);
 	}
 
 	@Override
@@ -91,6 +95,25 @@ public class DoReMi extends ApplicationAdapter {
 		}else{
 			openNewStage(newStage);
 		}
+	}
+
+	public static void addBackButton (Stage stage, Color c){
+		final Image backButton = new Image(sprites.findRegion("back"));
+		float scale = 0.4f;
+		backButton.setSize(backButton.getWidth() * scale, backButton.getHeight() * scale);
+		backButton.setPosition(viewport.getWorldWidth() * 0.02f, viewport.getWorldHeight() * 0.98f - backButton.getHeight());
+		backButton.setColor(c);
+		backButton.setOrigin(Align.center);
+		backButton.addListener(new ActorGestureListener(){
+			@Override
+			public void tap(InputEvent event, float x, float y, int count, int button) {
+				backButton.addAction(Actions.sequence(Actions.scaleTo(0.75f, 0.75f, 0.08f), Actions.scaleTo(1.0f, 1.0f, 0.08f)));
+				DoReMi.changeStage(TitleStage.class);
+				super.tap(event, x, y, count, button);
+			}
+		});
+
+		stage.addActor(backButton);
 	}
 
 	public static void openNewStage(Stage newStage){

@@ -37,7 +37,7 @@ public class TitleStage extends Stage {
         this.pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
         assetManager.load(this.pop);
 
-        setDebugAll(true);
+        setDebugAll(false);
 
         Group playGroup = new Group(),
                 optionsGroup = new Group(),
@@ -78,6 +78,14 @@ public class TitleStage extends Stage {
             optionsIcon.setScale(1.15f);
             optionsIcon.setPosition(optionsGroup.getWidth() / 2 - optionsIcon.getWidth() / 2, optionsGroup.getHeight() / 2 - optionsIcon.getHeight() / 2);
             optionsGroup.addActor(optionsIcon);
+
+            optionsGroup.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    DoReMi.changeStage(OptionsStage.class);
+                    super.tap(event, x, y, count, button);
+                }
+            });
         }
 
         {

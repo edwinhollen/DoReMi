@@ -35,16 +35,18 @@ public class GameStage extends Stage {
 
     private boolean solved = false;
 
-    AssetManager assetManager;
-    Group notePieces;
-    HorizontalGroup solutionSlots;
-    HorizontalGroup topBar;
-    Image listenButton;
+    private AssetManager assetManager;
+    private Group notePieces;
+    private HorizontalGroup solutionSlots;
+    private HorizontalGroup topBar;
+    private Image listenButton;
     // Group hornGroupLeft, hornGroupRight, hornGroups;
 
     public GameStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.assetManager = new AssetManager();
+
+        DoReMi.addBackButton(this, Color.LIGHT_GRAY);
 
         // generate the puzzle
         this.puzzle = new Puzzle(Puzzle.Difficulty.EASY);
@@ -345,11 +347,11 @@ public class GameStage extends Stage {
         // create top bar
         topBar = new HorizontalGroup();
         topBar.setHeight(listenButton.getHeight());
-        topBar.space(listenButton.getWidth() * 0.25f);
+        topBar.space(listenButton.getWidth() * 0.1f);
         topBar.addActor(listenButton);
         topBar.addActor(solutionSlots);
 
-        topBar.setPosition(viewport.getWorldWidth() * 0.052f, viewport.getWorldHeight() * 0.95f - topBar.getHeight());
+        topBar.setPosition(viewport.getWorldWidth() * 0.1f, viewport.getWorldHeight() * 0.95f - topBar.getHeight());
         addActor(topBar);
         topBar.toBack();
 
