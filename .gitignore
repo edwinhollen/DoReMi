@@ -65,3 +65,4 @@ build/
 
 ## Project specific
 android/assets/pack*.png
+*.keystore

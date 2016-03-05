@@ -19,8 +19,57 @@ android {
         minSdkVersion 8
         targetSdkVersion 23
     }
+    signingConfigs{
+        release{
+            storeFile file("../doremi-release-key.keystore")
+            storePassword ""
+            keyAlias "doremi"
+            keyPassword ""
+        }
+    }
+    buildTypes{
+        release{
+            signingConfig signingConfigs.release
+        }
+    }
 }
+import groovy.swing.SwingBuilder
+gradle.taskGraph.whenReady { taskGraph ->
+    if(taskGraph.hasTask(':android:assembleRelease')) {
+        def storePass = ''
+        def keyPass = ''
+        if(System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true, title: 'Enter password', alwaysOnTop: true, resizable: false, locationRelativeTo: null, pack: true, show: true) {
+                    vbox { // Put everything below each other
+                        label(text: "Please enter store passphrase:")
+                        def input1 = passwordField()
+                        label(text: "Please enter key passphrase:")
+                        def input2 = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            storePass = input1.password;
+                            keyPass = input2.password;
+                            dispose();
+                        })
+                    }
+                }
+            }
+        } else {
+            storePass = System.console().readPassword("\nPlease enter store passphrase: ")
+            keyPass = System.console().readPassword("\nPlease enter key passphrase: ")
+        }
 
+        if(storePass.size() <= 0 || keyPass.size() <= 0) {
+            throw new InvalidUserDataException("You must enter the passwords to proceed.")
+        }
+
+        storePass = new String(storePass)
+        keyPass = new String(keyPass)
+
+        android.signingConfigs.release.storePassword = storePass
+        android.signingConfigs.release.keyPassword = keyPass
+    }
+}
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
