@@ -62,7 +62,7 @@ public class DoReMi extends ApplicationAdapter {
 
 		preferences.flush();
 
-		changeStage(OptionsStage.class);
+		changeStage(TitleStage.class);
 	}
 
 	@Override
