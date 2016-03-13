@@ -49,10 +49,10 @@ public class DoReMi extends ApplicationAdapter {
 
 		font = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
 
-		preferences = Gdx.app.getPreferences("DoReMi");
+		preferences = Gdx.app.getPreferences("doremi");
 
 		// set up preferences
-		if(!preferences.contains("difficulty") || !Arrays.asList(Puzzle.Difficulty.values()).contains(preferences.getString("difficulty"))){
+		if((!preferences.contains("difficulty"))){
 			preferences.putString("difficulty", Puzzle.Difficulty.values()[0].toString());
 		}
 
@@ -146,8 +146,10 @@ public class DoReMi extends ApplicationAdapter {
 
 	@Override
 	public void dispose() {
-		super.dispose();
+		preferences.flush();
 		sprites.dispose();
 		batch.dispose();
+		currentStage.dispose();
+		super.dispose();
 	}
 }

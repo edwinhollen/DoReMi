@@ -182,8 +182,8 @@ public class OptionsStage extends Stage{
 
     @Override
     public void dispose() {
-        super.dispose();
-        shapeRenderer.dispose();
         DoReMi.preferences.flush();
+        shapeRenderer.dispose();
+        super.dispose();
     }
 }

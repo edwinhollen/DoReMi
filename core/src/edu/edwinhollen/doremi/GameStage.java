@@ -49,7 +49,7 @@ public class GameStage extends Stage {
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);
 
         // generate the puzzle
-        this.puzzle = new Puzzle(Puzzle.Difficulty.EASY);
+        this.puzzle = new Puzzle(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty")));
 
         // statistics
         this.puzzleStatistics = new PuzzleStatistics(this.puzzle);
@@ -61,6 +61,8 @@ public class GameStage extends Stage {
         assetManager.load("sounds/pop.mp3", Sound.class);
         assetManager.load("sounds/click.mp3", Sound.class);
         assetManager.load("sounds/rustle.mp3", Sound.class);
+
+        assetManager.finishLoading();
 
         addListener(new InputListener(){
             @Override
@@ -298,6 +300,23 @@ public class GameStage extends Stage {
                     Interpolation.circle
             ));
 
+            notePieceWithLabelGroup.setVisible(false);
+            notePieceWithLabelGroup.addAction(Actions.sequence(
+                Actions.scaleTo(0, 0),
+                Actions.delay(0.25f + 1.5f * (float) Math.random()),
+                Actions.visible(true),
+                Actions.parallel(
+                    Actions.scaleTo(1.5f, 1.5f, 0.1f),
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.0f, 1.0f);
+                        }
+                    })
+                ),
+                Actions.scaleTo(1.0f, 1.0f, 0.1f)
+            ));
+
             this.notePieces.addActor(notePieceWithLabelGroup);
         }
 
@@ -340,6 +359,10 @@ public class GameStage extends Stage {
                     })));
                 }
                 puzzleStatistics.addSolutionListen();
+                actor.addAction(Actions.repeat(4, Actions.sequence(
+                    Actions.moveBy(0, actor.getHeight() * 0.05f, 0.25f, Interpolation.circle),
+                    Actions.moveBy(0, -actor.getHeight() * 0.05f, 0.25f, Interpolation.circle)
+                )));
                 super.tap(event, x, y, count, button);
             }
         });
@@ -384,9 +407,30 @@ public class GameStage extends Stage {
     public void endSequence(){
         assetManager.get("sounds/yay.mp3", Sound.class).play(0.5f);
 
-        solutionSlots.addAction(Actions.fadeOut(0.5f));
-        notePieces.addAction(Actions.fadeOut(0.5f));
-        listenButton.addAction(Actions.fadeOut(0.5f));
+        solutionSlots.addAction(Actions.sequence(
+                Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        solutionSlots.remove();
+                    }
+                })
+        ));
+        notePieces.addAction(Actions.sequence(
+                Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        notePieces.remove();
+                    }
+                })
+        ));
+        listenButton.addAction(Actions.sequence(
+                Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        listenButton.remove();
+                    }
+                })
+        ));
 
         // do the actions
         /*
@@ -486,6 +530,16 @@ public class GameStage extends Stage {
             confettiGroup.addActor(confetti);
         }
         addActor(confettiGroup);
+
+
+        // temporary transition
+        addAction(Actions.delay(4.0f, Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            DoReMi.changeStage(GameStage.class);
+          }
+        }
+        )));
     }
 
     public boolean checkSolution(){
