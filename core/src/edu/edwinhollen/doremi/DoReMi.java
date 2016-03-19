@@ -60,9 +60,13 @@ public class DoReMi extends ApplicationAdapter {
 			preferences.putString("user_id", UUID.randomUUID().toString());
 		}
 
+		if(!preferences.contains("progress")){
+			preferences.putInteger("progress", 0);
+		}
+
 		preferences.flush();
 
-		changeStage(TitleStage.class);
+		changeStage(ProgressionStage.class);
 	}
 
 	@Override

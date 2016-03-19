@@ -69,7 +69,7 @@ public class TitleStage extends Stage {
             playGroup.addListener(new ActorGestureListener(){
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
-                    DoReMi.changeStage(GameStage.class);
+                    DoReMi.changeStage(ProgressionStage.class);
                     super.tap(event, x, y, count, button);
                 }
             });
