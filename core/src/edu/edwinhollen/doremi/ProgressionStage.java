@@ -1,14 +1,20 @@
 package edu.edwinhollen.doremi;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -17,11 +23,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class ProgressionStage extends Stage {
     private Texture progressionLines;
+    private AssetManager assetManager;
+
+    private AssetDescriptor<Sound> chain;
 
     public ProgressionStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
 
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);
+
+        assetManager = new AssetManager();
+
+        chain = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/chain.mp3"), Sound.class);
+        assetManager.load(chain);
+
 
         progressionLines = new Texture(Gdx.files.internal("bigimages/progressionlines.png"));
 
@@ -36,6 +51,11 @@ public class ProgressionStage extends Stage {
 
         // progression circles
         Label.LabelStyle circleLabelStyle = new Label.LabelStyle(DoReMi.font, Color.WHITE);
+
+        if(DoReMi.preferences.getInteger("progress") >= 10){
+            DoReMi.preferences.putInteger("progress", 0);
+            DoReMi.preferences.flush();
+        }
 
         Integer progress = DoReMi.preferences.getInteger("progress");
 
@@ -68,13 +88,43 @@ public class ProgressionStage extends Stage {
             if(i < progress){
                 circleActor.setColor(Color.valueOf(Chromatic.E_NATURAL.getColor()));
             }else if(i == progress){
+                // this is the next stage
                 circleActor.setColor(Color.valueOf(Chromatic.F_NATURAL.getColor()));
+                circleGroup.addAction(Actions.delay(2, Actions.forever(Actions.sequence(
+                    Actions.moveBy(0, circleGroup.getHeight() * 0.1f, 0.25f),
+                    Actions.moveBy(0, circleGroup.getHeight() * -0.1f, 0.25f),
+                    Actions.delay(2)
+                ))));
+                circleGroup.addListener(new ActorGestureListener(){
+                    @Override
+                    public void tap(InputEvent event, float x, float y, int count, int button) {
+                        super.tap(event, x, y, count, button);
+                        DoReMi.changeStage(GameStage.class);
+                    }
+                });
             }else{
                 circleActor.setColor(Color.valueOf(Chromatic.G_NATURAL.getColor()));
-                Image lock = new Image(DoReMi.sprites.findRegion("lock"));
+                final Image lock = new Image(DoReMi.sprites.findRegion("lock"));
                 lock.setSize(circleGroup.getWidth() * 0.59f, circleGroup.getHeight() * 1.5f);
                 lock.setPosition(circleGroup.getWidth() * 0.5f, circleGroup.getHeight() * 0.5f, Align.center);
                 circleGroup.addActor(lock);
+                circleGroup.addListener(new ActorGestureListener(){
+                    @Override
+                    public void tap(InputEvent event, float x, float y, int count, int button) {
+                        super.tap(event, x, y, count, button);
+                        Actor a = event.getListenerActor();
+                        float currentX = a.getX();
+                        float currentY = a.getY();
+                        final float dur = 0.05f;
+                        lock.addAction(Actions.repeat(1, Actions.sequence(
+                            Actions.moveBy(lock.getWidth() * 0.25f, 0, dur),
+                            Actions.moveBy(-lock.getWidth() * 0.25f, 0, dur),
+                            Actions.moveBy(-lock.getWidth() * 0.25f, 0, dur),
+                            Actions.moveBy(lock.getWidth() * 0.25f, 0, dur)
+                        )));
+                        assetManager.get(chain).play(0.25f, 1.0f, 1.0f);
+                    }
+                });
             }
         }
         circlesAndLines.addActor(circles);
@@ -87,8 +137,15 @@ public class ProgressionStage extends Stage {
     }
 
     @Override
+    public void act() {
+        super.act();
+        assetManager.update();
+    }
+
+    @Override
     public void dispose() {
         super.dispose();
         progressionLines.dispose();
+        assetManager.dispose();
     }
 }

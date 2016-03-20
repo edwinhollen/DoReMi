@@ -39,8 +39,80 @@ public class TitleStage extends Stage {
 
         this.rustle = new AssetDescriptor<Sound>("sounds/rustle.mp3", Sound.class);
         assetManager.load(this.rustle);
+        assetManager.finishLoadingAsset(this.rustle.fileName);
 
-        setDebugAll(false);
+        setDebugAll(true);
+
+        // logo
+        Group logoGroup = new Group();
+        logoGroup.setSize(viewport.getWorldWidth(), viewport.getWorldHeight() * 0.4f);
+        logoGroup.setPosition(0, viewport.getWorldHeight() * 0.5f);
+        {
+            Group doReMiGroup = new Group();
+            doReMiGroup.setSize(logoGroup.getWidth() * 0.65f, logoGroup.getHeight());
+            doReMiGroup.setPosition(logoGroup.getWidth() * 0.5f, 0, Align.bottom);
+            Image logoDo = new Image(DoReMi.sprites.findRegion("logo-do"));
+            Image logoRe = new Image(DoReMi.sprites.findRegion("logo-re"));
+            Image logoMi = new Image(DoReMi.sprites.findRegion("logo-mi"));
+
+            logoDo.setPosition(0, 0);
+            logoRe.setPosition(doReMiGroup.getWidth() * 0.33f, 0);
+            logoMi.setPosition(doReMiGroup.getWidth() * 0.65f, 0);
+
+            doReMiGroup.addActor(logoDo);
+            doReMiGroup.addActor(logoRe);
+            doReMiGroup.addActor(logoMi);
+
+            logoGroup.addActor(doReMiGroup);
+        }
+
+        {
+            Group logoNotesGroup = new Group();
+            logoNotesGroup.setSize(logoGroup.getWidth(), logoGroup.getHeight());
+            logoNotesGroup.setPosition(0, 0);
+
+            Image np1 = new Image(DoReMi.sprites.findRegion("logonote1"));
+            np1.setPosition(logoNotesGroup.getWidth() * 0.1f, logoNotesGroup.getHeight() * 0.55f);
+            np1.setSize(np1.getWidth() * 1.5f, np1.getHeight() * 1.5f);
+            logoNotesGroup.addActor(np1);
+
+            Image np2 = new Image(DoReMi.sprites.findRegion("logonote2"));
+            np2.setPosition(logoNotesGroup.getWidth() * 0.5f, logoNotesGroup.getHeight() * 1.0f);
+            np2.setSize(np2.getWidth() * 1.6f, np2.getHeight() * 1.6f);
+            logoNotesGroup.addActor(np2);
+
+            Image np3 = new Image(DoReMi.sprites.findRegion("logonote3"));
+            np3.setPosition(logoNotesGroup.getWidth() * 0.8f, logoNotesGroup.getHeight() * 0.9f);
+            np3.setSize(np3.getWidth() * 1.6f, np3.getHeight() * 1.6f);
+            logoNotesGroup.addActor(np3);
+
+            Image np4 = new Image(DoReMi.sprites.findRegion("logonote4"));
+            np4.setPosition(logoNotesGroup.getWidth() * 0.89f, logoNotesGroup.getHeight() * 0.4f);
+            np4.setSize(np4.getWidth() * 1.6f, np4.getHeight() * 1.6f);
+            logoNotesGroup.addActor(np4);
+
+            Image np5 = new Image(DoReMi.sprites.findRegion("logonote5"));
+            np5.setPosition(logoNotesGroup.getWidth() * 0.75f, logoNotesGroup.getHeight() * -0.35f);
+            np5.setSize(np5.getWidth() * 1.6f, np5.getHeight() * 1.6f);
+            logoNotesGroup.addActor(np5);
+
+            Image np6 = new Image(DoReMi.sprites.findRegion("logonote6"));
+            np6.setPosition(logoNotesGroup.getWidth() * 0.28f, logoNotesGroup.getHeight() * -0.35f);
+            np6.setSize(np6.getWidth() * 1.6f, np6.getHeight() * 1.6f);
+            logoNotesGroup.addActor(np6);
+
+            Image np7 = new Image(DoReMi.sprites.findRegion("logonote7"));
+            np7.setPosition(logoNotesGroup.getWidth() * 0.13f, logoNotesGroup.getHeight() * -0.05f);
+            np7.setSize(np7.getWidth() * 1.8f, np7.getHeight() * 1.8f);
+            logoNotesGroup.addActor(np7);
+
+
+            logoGroup.addActor(logoNotesGroup);
+        }
+
+        addActor(logoGroup);
+
+        // buttons
 
         Group playGroup = new Group(),
                 optionsGroup = new Group(),
@@ -163,6 +235,7 @@ public class TitleStage extends Stage {
 
 
         // logo
+        /*
         Group logoGroup = new Group();
         logoGroup.setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
         {
@@ -175,25 +248,22 @@ public class TitleStage extends Stage {
 
 
             // handle cute little note parts
-            float baseX = logoGroup.getX() + logoGroup.getWidth() * 0.5f;
-            float baseY = logoGroup.getY() + logoGroup.getHeight() * 0.5f;
-            Image[] logoNotes = new Image[7];
-            for(int i = 0; i < logoNotes.length; i++){
-                Image logoNote = new Image(DoReMi.sprites.findRegion(String.format("logonote%d", i + 1)));
-                logoNotes[i] = logoNote;
+            Group logoNotesGroup = new Group();
+            logoNotesGroup.setSize(logoGroup.getWidth(), logoGroup.getHeight());
+            {
+                Image a = new Image(DoReMi.sprites.findRegion("logonote1"));
+                a.setPosition(logoGroup.getWidth() * 0.1f, logoGroup.getHeight() * 0.85f);
+                logoNotesGroup.addActor(a);
             }
-            logoNotes[0].setPosition(baseX - logo.getWidth() * -0.85f, baseY - logo.getHeight() * -0.85f);
 
+            logoGroup.addActor(logoNotesGroup);
 
-            for(Image img : logoNotes){
-                // logoGroup.addActor(img);
-            }
         }
 
         addActor(logoGroup);
 
         logoGroup.setZIndex(0);
-        menuItems.setZIndex(1);
+        */
     }
 
     @Override

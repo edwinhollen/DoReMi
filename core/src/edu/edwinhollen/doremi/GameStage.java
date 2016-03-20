@@ -407,6 +407,12 @@ public class GameStage extends Stage {
     public void endSequence(){
         assetManager.get("sounds/yay.mp3", Sound.class).play(0.5f);
 
+        for(Actor notePiece : notePieces.getChildren()){
+            notePiece.clearListeners();
+        }
+
+        listenButton.clearListeners();
+
         solutionSlots.addAction(Actions.sequence(
                 Actions.fadeOut(0.5f), Actions.run(new Runnable() {
                     @Override
@@ -531,12 +537,14 @@ public class GameStage extends Stage {
         }
         addActor(confettiGroup);
 
+        DoReMi.preferences.putInteger("progress", DoReMi.preferences.getInteger("progress") + 1);
+
 
         // temporary transition
         addAction(Actions.delay(4.0f, Actions.run(new Runnable() {
           @Override
           public void run() {
-            DoReMi.changeStage(GameStage.class);
+            DoReMi.changeStage(ProgressionStage.class);
           }
         }
         )));
@@ -549,8 +557,6 @@ public class GameStage extends Stage {
             if(solutionSlot.getUserObject() == null || !(((Note) solutionSlot.getUserObject()).equals(puzzle.getSolutionNotes().get(i)))) return false;
         }
         puzzleStatistics.setEndTime(new Date());
-
-
 
         solved = true;
         endSequence();
