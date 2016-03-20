@@ -86,7 +86,43 @@ public class ProgressionStage extends Stage {
 
             // status
             if(i < progress){
-                circleActor.setColor(Color.valueOf(Chromatic.E_NATURAL.getColor()));
+                circleActor.setColor(Color.valueOf(Chromatic.A_FLAT.getColor()));
+                // add the check mark
+                Image checkMark = new Image(DoReMi.sprites.findRegion("checkmark"));
+                checkMark.setSize(checkMark.getWidth() * 0.25f, checkMark.getHeight() * 0.25f);
+                checkMark.setPosition(circleGroup.getWidth() * 0.5f, circleGroup.getHeight() * 0.5f, Align.center);
+                circleGroup.addActor(checkMark);
+
+                Group confettiGroup = new Group();
+                confettiGroup.setSize(circleGroup.getWidth(), circleGroup.getHeight());
+                for(int j = 0; j < 10; j++){
+                    Image confetti = new Image(DoReMi.sprites.findRegion(String.format("confetti%d", Pick.integer(1,4))));
+                    confetti.setSize(confetti.getWidth() * 0.2f, confetti.getHeight() * 0.2f);
+                    confetti.setRotation(Pick.integer(0, 360));
+                    confetti.setColor(Color.valueOf(Pick.pick(Chromatic.values()).getColor()));
+                    confetti.setPosition(confettiGroup.getWidth() * (float) Math.random(), confettiGroup.getHeight() * (float) Math.random());
+                    confetti.addAction(Actions.forever(Actions.parallel(
+                            Actions.sequence(
+                                    Actions.moveBy(0, confetti.getHeight() * 0.25f, 2f + (float) Math.random() * 3f),
+                                    Actions.moveBy(0, confetti.getHeight() * -0.25f, 2f + (float) Math.random() * 3f)
+                            ),
+                            Actions.sequence(
+                                    Actions.rotateBy(Pick.integer(-20, 20) / 100f, 3f + (float) Math.random() * 5f)
+                            )
+                    )));
+                    confettiGroup.addActor(confetti);
+                }
+                confettiGroup.setOrigin(Align.center);
+                confettiGroup.addAction(Actions.sequence(
+                    Actions.scaleTo(0, 0),
+                    Actions.delay(0.5f),
+                    Actions.parallel(
+                        Actions.moveBy(0, confettiGroup.getHeight() * 0.5f, 0.1f),
+                        Actions.scaleTo(1.0f, 1.0f, 0.25f)
+                    )
+                ));
+                circleGroup.addActor(confettiGroup);
+
             }else if(i == progress){
                 // this is the next stage
                 circleActor.setColor(Color.valueOf(Chromatic.F_NATURAL.getColor()));

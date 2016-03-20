@@ -46,7 +46,7 @@ public class GameStage extends Stage {
         super(viewport, batch);
         this.assetManager = new AssetManager();
 
-        DoReMi.addBackButton(this, Color.LIGHT_GRAY);
+        DoReMi.addBackButton(this, Color.LIGHT_GRAY, ProgressionStage.class);
 
         // generate the puzzle
         this.puzzle = new Puzzle(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty")));

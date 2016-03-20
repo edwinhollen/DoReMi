@@ -119,6 +119,10 @@ public class DoReMi extends ApplicationAdapter {
 	}
 
 	public static void addBackButton (Stage stage, Color c){
+		addBackButton(stage, c, TitleStage.class);
+	}
+
+	public static void addBackButton(Stage fromStage, Color c, final Class<? extends Stage> toStage){
 		final Image backButton = new Image(sprites.findRegion("back"));
 		float scale = 0.4f;
 		backButton.setSize(backButton.getWidth() * scale, backButton.getHeight() * scale);
@@ -129,12 +133,12 @@ public class DoReMi extends ApplicationAdapter {
 			@Override
 			public void tap(InputEvent event, float x, float y, int count, int button) {
 				backButton.addAction(Actions.sequence(Actions.scaleTo(0.75f, 0.75f, 0.08f), Actions.scaleTo(1.0f, 1.0f, 0.08f)));
-				DoReMi.changeStage(TitleStage.class);
+				DoReMi.changeStage(toStage);
 				super.tap(event, x, y, count, button);
 			}
 		});
 
-		stage.addActor(backButton);
+		fromStage.addActor(backButton);
 	}
 
 	public static void openNewStage(Stage newStage){

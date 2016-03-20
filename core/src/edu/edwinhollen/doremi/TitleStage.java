@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Collections;
+
 /**
  * Created by fubar on 2/8/16.
  */
@@ -39,9 +41,11 @@ public class TitleStage extends Stage {
 
         this.rustle = new AssetDescriptor<Sound>("sounds/rustle.mp3", Sound.class);
         assetManager.load(this.rustle);
-        assetManager.finishLoadingAsset(this.rustle.fileName);
 
-        setDebugAll(true);
+
+        assetManager.finishLoading();
+
+        setDebugAll(false);
 
         // logo
         Group logoGroup = new Group();
@@ -64,6 +68,23 @@ public class TitleStage extends Stage {
             doReMiGroup.addActor(logoMi);
 
             logoGroup.addActor(doReMiGroup);
+
+            for(int i = 0; i < doReMiGroup.getChildren().size; i++){
+                Actor a = doReMiGroup.getChildren().get(i);
+                a.setOrigin(Align.center);
+                a.addAction(Actions.sequence(
+                    Actions.scaleTo(0, 0),
+                    Actions.delay(0.5f + 0.25f * i),
+                    Actions.scaleTo(1.5f, 1.5f, 0.05f),
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            assetManager.get(pop).play(0.5f, 0.5f, 1.0f);
+                        }
+                    }),
+                    Actions.scaleTo(1.0f, 1.0f, 0.2f)
+                ));
+            }
         }
 
         {
@@ -105,6 +126,31 @@ public class TitleStage extends Stage {
             np7.setPosition(logoNotesGroup.getWidth() * 0.13f, logoNotesGroup.getHeight() * -0.05f);
             np7.setSize(np7.getWidth() * 1.8f, np7.getHeight() * 1.8f);
             logoNotesGroup.addActor(np7);
+
+            logoNotesGroup.getChildren().shuffle();
+
+            for(int i = 0; i < logoNotesGroup.getChildren().size; i++){
+                Actor a = logoNotesGroup.getChildren().get(i);
+                a.setOrigin(Align.center);
+                a.addAction(Actions.sequence(
+                    Actions.scaleTo(0, 0),
+                    Actions.delay(1.5f + 0.11f * i),
+                    Actions.scaleTo(2.0f, 2.0f, 0.075f),
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            float pitch = Pick.integer(50, 200) / 100;
+                            assetManager.get(pop).play(0.5f, 1.0f, pitch);
+                        }
+                    }),
+                    Actions.scaleTo(1.0f, 1.0f, 0.25f),
+                    Actions.delay(i * 1.0f * (3.0f * (float) Math.random())),
+                    Actions.forever(Actions.sequence(
+                        Actions.moveBy(0, a.getHeight() * 0.1f, 3f, Interpolation.sine),
+                        Actions.moveBy(0, a.getHeight() * -0.1f, 3f, Interpolation.sine)
+                    ))
+                ));
+            }
 
 
             logoGroup.addActor(logoNotesGroup);
@@ -188,13 +234,15 @@ public class TitleStage extends Stage {
         for(int i = 0; i < menuItems.getChildren().size; i++){
             Actor a = menuItems.getChildren().get(i);
             a.addAction(Actions.sequence(
-                    Actions.delay(0.25f + i * 0.25f),
+                    Actions.delay(4.0f + i * 0.1f),
+                    /*
                     Actions.run(new Runnable() {
                         @Override
                         public void run() {
                             assetManager.get(rustle).play(0.5f, (float) Pick.integer(175, 250) / 100f, 1.0f);
                         }
                     }),
+                    */
                     Actions.moveBy(0, a.getHeight() * 0.1f, 0.1f, Interpolation.sine),
                     Actions.moveBy(0, -(a.getHeight() * 0.1f), 0.1f, Interpolation.sine)
             ));
