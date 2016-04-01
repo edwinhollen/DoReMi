@@ -37,7 +37,6 @@ public class ProgressionStage extends Stage {
         chain = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/chain.mp3"), Sound.class);
         assetManager.load(chain);
 
-
         progressionLines = new Texture(Gdx.files.internal("bigimages/progressionlines.png"));
 
         // group for circles and lines

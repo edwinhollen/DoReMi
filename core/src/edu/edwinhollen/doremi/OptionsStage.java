@@ -59,6 +59,7 @@ public class OptionsStage extends Stage{
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);
 
         Label.LabelStyle lblStyle = new Label.LabelStyle(DoReMi.font, Color.BLACK);
+        Label.LabelStyle lblStyleMini = new Label.LabelStyle(DoReMi.fontMini, Color.GRAY);
 
         Table table = new Table();
         table.setSize(viewport.getWorldWidth() * 0.9f, viewport.getWorldHeight() * 0.9f);
@@ -80,7 +81,7 @@ public class OptionsStage extends Stage{
 
 
         {
-            final Label difficultyDescription = new Label("", lblStyle);
+            final Label difficultyDescription = new Label("", lblStyleMini);
             difficultyDescription.setAlignment(Align.center);
 
             final Image plusDifficulty = new Image(DoReMi.sprites.findRegion("plus"));

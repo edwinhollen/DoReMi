@@ -10,6 +10,9 @@ public class Puzzle {
 
     private final static Integer LOWEST_OCTAVE = 2, HIGHEST_OCTAVE = 2;
 
+    public Puzzle(){
+
+    }
 
     public Puzzle(Difficulty difficulty){
         this.solutionNotes = new LinkedList<Note>();

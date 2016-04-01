@@ -6,13 +6,15 @@ import java.util.Date;
  * Created by Fubar on 1/31/2016.
  */
 public class PuzzleStatistics {
-    final private Puzzle puzzle;
+    private Puzzle puzzle;
     private Integer solutionListens = 0;
     private Integer notePieceListens = 0;
-    private Date startTime, endTime = null;
+    private Long startTime, endTime = null;
     public PuzzleStatistics(Puzzle puzzle){
         this.puzzle = puzzle;
     }
+
+    public PuzzleStatistics(){}
 
     public Puzzle getPuzzle() {
         return puzzle;
@@ -34,19 +36,19 @@ public class PuzzleStatistics {
         this.notePieceListens++;
     }
 
-    public void setStartTime(Date startTime){
+    public void setStartTime(Long startTime){
         this.startTime = startTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
-    public Date getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public Date getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 }

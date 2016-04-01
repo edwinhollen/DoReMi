@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -311,6 +312,7 @@ public class GameStage extends Stage {
                         @Override
                         public void run() {
                             assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.0f, 1.0f);
+
                         }
                     })
                 ),
@@ -380,7 +382,7 @@ public class GameStage extends Stage {
 
 
         // start the timer
-        puzzleStatistics.setStartTime(new Date());
+        puzzleStatistics.setStartTime((new Date()).getTime());
     }
 
     @Override
@@ -556,7 +558,13 @@ public class GameStage extends Stage {
             Actor solutionSlot = solutionSlots.getChildren().get(i);
             if(solutionSlot.getUserObject() == null || !(((Note) solutionSlot.getUserObject()).equals(puzzle.getSolutionNotes().get(i)))) return false;
         }
-        puzzleStatistics.setEndTime(new Date());
+        puzzleStatistics.setEndTime((new Date()).getTime());
+
+
+        Json json = new Json();
+        PuzzleStatisticsJson savedStatistics = json.fromJson(PuzzleStatisticsJson.class, DoReMi.preferences.getString("stats"));
+        savedStatistics.puzzleStatistics.add(puzzleStatistics);
+        DoReMi.preferences.putString("stats", json.toJson(savedStatistics));
 
         solved = true;
         endSequence();

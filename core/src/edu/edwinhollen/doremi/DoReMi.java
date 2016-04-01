@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -34,7 +36,7 @@ public class DoReMi extends ApplicationAdapter {
 	static Viewport viewport;
 	static Stage currentStage;
 	static TextureAtlas sprites;
-	static BitmapFont font;
+	static BitmapFont font, fontMini;
 	static Preferences preferences;
 
 	static AssetManager assets;
@@ -47,7 +49,28 @@ public class DoReMi extends ApplicationAdapter {
 		sprites = new TextureAtlas("pack.atlas");
 		assets = new AssetManager();
 
+
+		{
+			// generate fonts
+			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GosmickSans.ttf"));
+			FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+			parameter.renderCount = 8;
+			parameter.genMipMaps = true;
+			parameter.minFilter = Texture.TextureFilter.Linear;
+			parameter.magFilter = Texture.TextureFilter.Linear;
+			parameter.kerning = true;
+			parameter.size = 120;
+			font = generator.generateFont(parameter);
+			parameter.size = 64;
+			fontMini = generator.generateFont(parameter);
+			generator.dispose();
+		}
+
+		/*
 		font = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
+		fontMini = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
+		fontMini.getData().setScale(0.55f, 0.55f);
+		*/
 
 		preferences = Gdx.app.getPreferences("doremi");
 
@@ -62,6 +85,11 @@ public class DoReMi extends ApplicationAdapter {
 
 		if(!preferences.contains("progress")){
 			preferences.putInteger("progress", 0);
+		}
+
+		if(!preferences.contains("stats")){
+			Json json = new Json();
+			preferences.putString("stats", json.toJson(new PuzzleStatisticsJson()));
 		}
 
 		preferences.flush();

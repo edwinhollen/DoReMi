@@ -1,7 +1,5 @@
 package edu.edwinhollen.doremi;
 
-import java.util.Optional;
-
 /**
  * Created by Fubar on 1/16/2016.
  */
@@ -12,6 +10,10 @@ public class Note {
     public Note(Chromatic chromatic, Integer octave){
         this.chromatic = chromatic;
         this.octave = octave;
+    }
+
+    public Note(){
+
     }
 
     public Note(Chromatic chromatic){

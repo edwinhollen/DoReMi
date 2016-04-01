@@ -223,6 +223,14 @@ public class TitleStage extends Stage {
             statsIcon.setScale(0.75f);
             statsIcon.setPosition(statsGroup.getWidth() / 2 - statsIcon.getWidth() / 2, statsGroup.getHeight() / 2 - statsIcon.getHeight() / 2);
             statsGroup.addActor(statsIcon);
+
+            statsGroup.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    DoReMi.changeStage(StatsStage.class);
+                    super.tap(event, x, y, count, button);
+                }
+            });
         }
 
         menuItems.setHeight(menuItems.getChildren().get(0).getHeight());
