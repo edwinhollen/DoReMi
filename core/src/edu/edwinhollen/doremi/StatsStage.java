@@ -74,6 +74,13 @@ public class StatsStage extends Stage {
                 Label averageTimeInfoLabel = new Label("The average amount of time spent on each puzzle", lblStyleMini);
                 masterTable.add(averageTimeInfoLabel).colspan(2).align(Align.left);
                 masterTable.row();
+
+
+
+            }
+
+            {
+
             }
 
 

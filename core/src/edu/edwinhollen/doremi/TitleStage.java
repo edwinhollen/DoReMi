@@ -215,6 +215,14 @@ public class TitleStage extends Stage {
             infoIcon.setScale(0.85f);
             infoIcon.setPosition(infoGroup.getWidth() / 2 - infoIcon.getWidth() / 2, infoGroup.getHeight() / 2 - infoIcon.getHeight() / 2);
             infoGroup.addActor(infoIcon);
+
+            infoGroup.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    DoReMi.changeStage(InfoStage.class);
+                    super.tap(event, x, y, count, button);
+                }
+            });
         }
 
         {

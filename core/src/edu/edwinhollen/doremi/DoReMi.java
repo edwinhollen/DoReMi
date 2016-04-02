@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -37,6 +38,7 @@ public class DoReMi extends ApplicationAdapter {
 	static Stage currentStage;
 	static TextureAtlas sprites;
 	static BitmapFont font, fontMini;
+	static Label.LabelStyle labelNormal, labelMini;
 	static Preferences preferences;
 
 	static AssetManager assets;
@@ -66,11 +68,8 @@ public class DoReMi extends ApplicationAdapter {
 			generator.dispose();
 		}
 
-		/*
-		font = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
-		fontMini = new BitmapFont(Gdx.files.internal("fonts/font_normal.fnt"));
-		fontMini.getData().setScale(0.55f, 0.55f);
-		*/
+		labelNormal = new Label.LabelStyle(DoReMi.font, Color.BLACK);
+		labelMini = new Label.LabelStyle(DoReMi.fontMini, Color.GRAY);
 
 		preferences = Gdx.app.getPreferences("doremi");
 
