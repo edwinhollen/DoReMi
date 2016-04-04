@@ -40,6 +40,7 @@ public class DoReMi extends ApplicationAdapter {
 	static BitmapFont font, fontMini;
 	static Label.LabelStyle labelNormal, labelMini;
 	static Preferences preferences;
+	static WebStats webStats;
 
 	static AssetManager assets;
 
@@ -50,7 +51,7 @@ public class DoReMi extends ApplicationAdapter {
 
 		sprites = new TextureAtlas("pack.atlas");
 		assets = new AssetManager();
-
+		webStats = new WebStats();
 
 		{
 			// generate fonts
@@ -78,10 +79,6 @@ public class DoReMi extends ApplicationAdapter {
 			preferences.putString("difficulty", Puzzle.Difficulty.values()[0].toString());
 		}
 
-		if(!preferences.contains("user_id")){
-			preferences.putString("user_id", UUID.randomUUID().toString());
-		}
-
 		if(!preferences.contains("progress")){
 			preferences.putInteger("progress", 0);
 		}
@@ -91,7 +88,26 @@ public class DoReMi extends ApplicationAdapter {
 			preferences.putString("stats", json.toJson(new PuzzleStatisticsJson()));
 		}
 
+		if(!preferences.contains("web_stats")){
+			preferences.putBoolean("web_stats", false);
+		}
+
+		if(!preferences.contains("player_id")){
+			preferences.putString("player_id", "");
+		}
+
+		if(preferences.getBoolean("web_stats") && preferences.getString("player_id").isEmpty()){
+			webStats.newPlayer(new Runnable() {
+				@Override
+				public void run() {
+
+				}
+			});
+		}
+
 		preferences.flush();
+
+		webStats = new WebStats();
 
 		changeStage(TitleStage.class);
 	}
