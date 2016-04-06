@@ -8,10 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
@@ -46,6 +43,14 @@ public class OptionsStage extends Stage{
         }
     }
 
+    private Action inputInteractAction(){
+        return Actions.sequence(
+                Actions.scaleTo(1.0f, 0.1f, 0.05f),
+                Actions.scaleTo(1.0f, 1.25f, 0.05f),
+                Actions.scaleTo(1.0f, 1.0f, 0.1f)
+        );
+    }
+
     public OptionsStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.shapeRenderer = new ShapeRenderer();
@@ -64,8 +69,10 @@ public class OptionsStage extends Stage{
 
         // label
         table.columnDefaults(0).width(table.getWidth() * 0.35f);
-        // value
-        table.columnDefaults(1).width(table.getWidth() * 0.65f);
+        // checkbox
+        table.columnDefaults(1).width(table.getWidth() * 0.15f);
+        // description
+        table.columnDefaults(2).width(table.getWidth() * 0.5f);
 
         float plusMinusScale = 0.4f;
 
@@ -79,9 +86,9 @@ public class OptionsStage extends Stage{
             minusDifficulty.setSize(minusDifficulty.getWidth() * plusMinusScale, minusDifficulty.getHeight() * plusMinusScale);
 
 
-            Label lblDifficulty = new Label("Difficulty:", DoReMi.labelNormal);
+            final Label lblDifficulty = new Label("Difficulty:", DoReMi.labelNormal);
             lblDifficulty.setAlignment(Align.topLeft);
-            table.add(lblDifficulty);
+
 
             final Label valDifficulty = new Label(DoReMi.preferences.getString("difficulty"), DoReMi.labelNormal);
             valDifficulty.setAlignment(Align.center);
@@ -102,14 +109,9 @@ public class OptionsStage extends Stage{
 
                         difficultyDescription.setText(currentDifficulty.getDescription());
 
-
                         assetManager.get(pop).play(0.5f, 1.25f, 1.0f);
 
-                        minusDifficulty.addAction(Actions.sequence(
-                                Actions.scaleTo(1.0f, 0.1f, 0.05f),
-                                Actions.scaleTo(1.0f, 1.25f, 0.05f),
-                                Actions.scaleTo(1.0f, 1.0f, 0.1f)
-                        ));
+                        minusDifficulty.addAction(inputInteractAction());
                     }
                 }
             });
@@ -132,17 +134,19 @@ public class OptionsStage extends Stage{
 
                         assetManager.get(pop).play(0.5f, 1.5f, 1.0f);
 
-                        plusDifficulty.addAction(Actions.sequence(
-                                Actions.scaleTo(1.0f, 0.1f, 0.05f),
-                                Actions.scaleTo(1.0f, 1.25f, 0.05f),
-                                Actions.scaleTo(1.0f, 1.0f, 0.1f)
+                        plusDifficulty.addAction(inputInteractAction());
+
+                        /*
+                        valDifficulty.addAction(Actions.sequence(
+                                Actions.rotateTo(60f)
                         ));
+                        */
                     }
                 }
             });
 
             Group difficultyVal = new Group();
-            difficultyVal.setWidth(table.columnDefaults(1).getPrefWidth());
+            difficultyVal.setWidth(table.columnDefaults(1).getPrefWidth() + table.columnDefaults(2).getPrefWidth());
             difficultyVal.setHeight(plusDifficulty.getHeight() * plusMinusScale * 2.5f);
             difficultyVal.setPosition(0, 0);
 
@@ -154,7 +158,9 @@ public class OptionsStage extends Stage{
             difficultyVal.addActor(valDifficulty);
             difficultyVal.addActor(plusDifficulty);
 
-            table.add(difficultyVal);
+            table.add(lblDifficulty);
+
+            table.add(difficultyVal).colspan(2).left();
             plusMinusVisibility(plusDifficulty, minusDifficulty);
             table.row().spaceBottom(difficultyVal.getHeight() * 0.5f);
 
@@ -166,14 +172,51 @@ public class OptionsStage extends Stage{
 
             difficultyDescription.setText(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty")).getDescription());
             table.add();
-            table.add(difficultyDescription);
+            table.add(difficultyDescription).colspan(2);
             table.row();
         }
 
         {
-            Label noteNameLabel = new Label("Always show note names", DoReMi.labelNormal);
+            final Label noteNameLabel = new Label("Note names", DoReMi.labelNormal);
+            final Label noteNameDescription = new Label("Always show note names on note pieces", DoReMi.labelMini);
+            final Group checkGroup = new Group();
             final Image check = new Image(DoReMi.sprites.findRegion("checkboxchecked-sized"));
             final Image uncheck = new Image(DoReMi.sprites.findRegion("checkboxunchecked-sized"));
+
+            check.setColor(Color.BLACK);
+            uncheck.setColor(Color.BLACK);
+
+            checkGroup.setSize(check.getWidth(), check.getHeight());
+
+            checkGroup.addActor(check);
+            checkGroup.addActor(uncheck);
+
+            final Runnable showHideCheck = new Runnable() {
+                @Override
+                public void run() {
+                    check.setVisible(DoReMi.preferences.getBoolean("note_names"));
+                    uncheck.setVisible(!check.isVisible());
+                }
+            };
+
+            checkGroup.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    event.getListenerActor().addAction(inputInteractAction());
+                    DoReMi.preferences.putBoolean("note_names", !DoReMi.preferences.getBoolean("note_names"));
+                    showHideCheck.run();
+                    super.tap(event, x, y, count, button);
+                }
+            });
+
+            checkGroup.setOrigin(Align.center);
+
+            showHideCheck.run();
+
+            table.add(noteNameLabel);
+            table.add(checkGroup);
+            table.add(noteNameDescription);
+            table.row();
         }
 
         /*

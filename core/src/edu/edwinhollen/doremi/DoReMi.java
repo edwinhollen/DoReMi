@@ -91,6 +91,10 @@ public class DoReMi extends ApplicationAdapter {
 			preferences.putString("stats", json.toJson(new PuzzleStatisticsJson()));
 		}
 
+		if(!preferences.contains("note_names")){
+			preferences.putBoolean("note_names", false);
+		}
+
 		/*
 		if(!preferences.contains("web_stats")){
 			preferences.putBoolean("web_stats", false);

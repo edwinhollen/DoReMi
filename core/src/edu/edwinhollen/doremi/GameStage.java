@@ -178,9 +178,11 @@ public class GameStage extends Stage {
             final Label label = new Label(note.toFancyStringWithOctave(), notePieceLabelStyle);
             label.setAlignment(Align.center);
             label.setPosition(notePieceGroup.getWidth() / 2 - label.getWidth() / 2, - notePieceGroup.getHeight() * 0.28f);
-            label.addAction(Actions.fadeOut(0));
-            notePieceWithLabelGroup.addActor(label);
 
+            if(!DoReMi.preferences.getBoolean("note_names")){
+                label.addAction(Actions.fadeOut(0));
+            }
+            notePieceWithLabelGroup.addActor(label);
             notePieceWithLabelGroup.addActor(notePieceGroup);
 
             // add event listeners for dragging
@@ -287,7 +289,9 @@ public class GameStage extends Stage {
                             Actions.rotateTo(-3f, 0.1f, Interpolation.circle),
                             Actions.rotateTo(3f, 0.1f, Interpolation.circle)
                     )), Actions.rotateTo(0f, 0.2f, Interpolation.circle)));
-                    label.addAction(Actions.sequence(Actions.fadeIn(0.05f), Actions.delay(1f), Actions.fadeOut(1f)));
+                    if(!DoReMi.preferences.getBoolean("note_names")){
+                        label.addAction(Actions.sequence(Actions.fadeIn(0.05f), Actions.delay(1f), Actions.fadeOut(1f)));
+                    }
                     actor.toFront();
                     super.tap(event, x, y, count, button);
                 }
@@ -380,7 +384,6 @@ public class GameStage extends Stage {
         topBar.setPosition(viewport.getWorldWidth() * 0.1f, viewport.getWorldHeight() * 0.95f - topBar.getHeight());
         addActor(topBar);
         topBar.toBack();
-
 
         // start the timer
         puzzleStatistics.setStartTime((new Date()).getTime());
