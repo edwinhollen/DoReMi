@@ -83,11 +83,6 @@ public class StatsStage extends Stage {
 
             }
 
-
-
-
-
-
             scrollpane.layout();
             addActor(scrollpane);
         }

@@ -170,6 +170,7 @@ public class OptionsStage extends Stage{
             table.row();
         }
 
+        /*
         {
             final Image check = new Image(DoReMi.sprites.findRegion("checkboxchecked-sized"));
             check.setColor(Color.BLACK);
@@ -252,6 +253,7 @@ public class OptionsStage extends Stage{
             table.add(webStatsDescription);
             table.row();
         }
+        */
 
         addActor(table);
 

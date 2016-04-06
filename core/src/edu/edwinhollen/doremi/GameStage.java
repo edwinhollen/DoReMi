@@ -304,10 +304,10 @@ public class GameStage extends Stage {
             notePieceWithLabelGroup.setVisible(false);
             notePieceWithLabelGroup.addAction(Actions.sequence(
                 Actions.scaleTo(0, 0),
-                Actions.delay(0.25f + 1.5f * (float) Math.random()),
+                Actions.delay(0.35f + 0.075f * allNoteActors.indexOf(a)),
                 Actions.visible(true),
                 Actions.parallel(
-                    Actions.scaleTo(1.5f, 1.5f, 0.1f),
+                    Actions.scaleTo(1.5f, 2.0f, 0.1f),
                     Actions.run(new Runnable() {
                         @Override
                         public void run() {
@@ -316,6 +316,7 @@ public class GameStage extends Stage {
                         }
                     })
                 ),
+                Actions.scaleTo(1.25f, 0.5f, 0.085f),
                 Actions.scaleTo(1.0f, 1.0f, 0.1f)
             ));
 
