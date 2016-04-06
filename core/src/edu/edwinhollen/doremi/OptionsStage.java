@@ -170,6 +170,12 @@ public class OptionsStage extends Stage{
             table.row();
         }
 
+        {
+            Label noteNameLabel = new Label("Always show note names", DoReMi.labelNormal);
+            final Image check = new Image(DoReMi.sprites.findRegion("checkboxchecked-sized"));
+            final Image uncheck = new Image(DoReMi.sprites.findRegion("checkboxunchecked-sized"));
+        }
+
         /*
         {
             final Image check = new Image(DoReMi.sprites.findRegion("checkboxchecked-sized"));
@@ -254,6 +260,7 @@ public class OptionsStage extends Stage{
             table.row();
         }
         */
+
 
         addActor(table);
 
