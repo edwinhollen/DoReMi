@@ -64,8 +64,7 @@ public class InfoStage extends Stage {
 
             masterTable.add(site).spaceBottom(bottomSpace).row();
 
-            // TODO: Get the version working
-            Label version = new Label(String.format("Currently running version %s", "?"), DoReMi.labelMini);
+            Label version = new Label(String.format("Currently running version %s", DoReMi.version), DoReMi.labelMini);
 
             masterTable.add(version).spaceBottom(bottomSpace).row();
 

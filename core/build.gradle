@@ -10,3 +10,6 @@ eclipse.project {
     name = appName + "-core"
 }
 
+def versionFile = new File("$rootDir/android/assets/version.txt")
+versionFile.write(allprojects.version.toString())
+println("Wrote version file "+allprojects.version)

@@ -40,6 +40,7 @@ public class DoReMi extends ApplicationAdapter {
 	static BitmapFont font, fontMini;
 	static Label.LabelStyle labelNormal, labelMini;
 	static Preferences preferences;
+	static String version;
 	// static WebStats webStats;
 
 	static AssetManager assets;
@@ -52,6 +53,8 @@ public class DoReMi extends ApplicationAdapter {
 		sprites = new TextureAtlas("pack.atlas");
 		assets = new AssetManager();
 		// webStats = new WebStats();
+
+		version = Gdx.files.internal("version.txt").readString().replace("[", "").replace("]", "");
 
 		{
 			// generate fonts
