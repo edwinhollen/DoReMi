@@ -56,7 +56,7 @@ public class OptionsStage extends Stage{
         this.shapeRenderer = new ShapeRenderer();
         this.assetManager = new AssetManager();
 
-        this.pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
+        this.pop = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/pop.mp3"), Sound.class);
         this.assetManager.load(this.pop);
 
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);

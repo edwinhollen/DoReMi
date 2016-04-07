@@ -1,6 +1,8 @@
 package edu.edwinhollen.doremi;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -43,6 +45,9 @@ public class GameStage extends Stage {
     private Image listenButton;
     // Group hornGroupLeft, hornGroupRight, hornGroups;
 
+
+    private AssetDescriptor<Sound> yay, pop, click, rustle;
+
     public GameStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.assetManager = new AssetManager();
@@ -58,10 +63,15 @@ public class GameStage extends Stage {
         List<Actor> solutionNoteActors, extraNoteActors;
 
         // load necessary sound effects
-        assetManager.load("sounds/yay.mp3", Sound.class);
-        assetManager.load("sounds/pop.mp3", Sound.class);
-        assetManager.load("sounds/click.mp3", Sound.class);
-        assetManager.load("sounds/rustle.mp3", Sound.class);
+        yay = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/yay.mp3"), Sound.class);
+        pop = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/pop.mp3"), Sound.class);
+        click = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/click.mp3"), Sound.class);
+        rustle = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/rustle.mp3"), Sound.class);
+
+        assetManager.load(yay);
+        assetManager.load(pop);
+        assetManager.load(click);
+        // assetManager.load(rustle);
 
         assetManager.finishLoading();
 
@@ -202,7 +212,7 @@ public class GameStage extends Stage {
                     for(Actor solutionSlot : solutionSlots.getChildren()){
                         if(solutionSlot.getUserObject() != null && solutionSlot.getUserObject().equals(event.getListenerActor().getUserObject())){
                             solutionSlot.setUserObject(null);
-                            assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                            assetManager.get(pop).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
                             actor.addAction(Actions.sequence(
                                     Actions.scaleTo(0.9f, 0.35f, 0.01f),
                                     Actions.scaleTo(1.4f, 1.4f, 0.075f),
@@ -266,7 +276,7 @@ public class GameStage extends Stage {
                                     Actions.delay(0.015f, Actions.run(new Runnable() {
                                         @Override
                                         public void run() {
-                                            assetManager.get("sounds/click.mp3", Sound.class).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                                            assetManager.get(click).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
                                         }
                                     }))
                                 )
@@ -315,7 +325,7 @@ public class GameStage extends Stage {
                     Actions.run(new Runnable() {
                         @Override
                         public void run() {
-                            assetManager.get("sounds/pop.mp3", Sound.class).play(1.0f, 1.0f, 1.0f);
+                            assetManager.get(pop).play(1.0f, 1.0f, 1.0f);
 
                         }
                     })
@@ -411,7 +421,7 @@ public class GameStage extends Stage {
 
 
     public void endSequence(){
-        assetManager.get("sounds/yay.mp3", Sound.class).play(0.5f);
+        assetManager.get(yay).play(0.5f);
 
         for(Actor notePiece : notePieces.getChildren()){
             notePiece.clearListeners();
