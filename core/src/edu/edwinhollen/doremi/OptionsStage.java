@@ -177,7 +177,7 @@ public class OptionsStage extends Stage{
         }
 
         {
-            final Label noteNameLabel = new Label("Note names", DoReMi.labelNormal);
+            final Label noteNameLabel = new Label("Note names:", DoReMi.labelNormal);
             final Label noteNameDescription = new Label("Always show note names on note pieces", DoReMi.labelMini);
             final Group checkGroup = new Group();
             final Image check = new Image(DoReMi.sprites.findRegion("checkboxchecked-sized"));
