@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
@@ -28,24 +29,12 @@ public class TitleStage extends Stage {
 
     // asset descriptions
     private AssetDescriptor<Music> warmupMusic;
-    private AssetDescriptor<Sound> pop, rustle;
 
     public TitleStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.assetManager = new AssetManager();
-        this.warmupMusic = new AssetDescriptor<Music>("sounds/warmup.mp3", Music.class);
+        this.warmupMusic = new AssetDescriptor<Music>("sounds/warmupfades.mp3", Music.class);
         assetManager.load(warmupMusic);
-
-        this.pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
-        assetManager.load(this.pop);
-
-        this.rustle = new AssetDescriptor<Sound>("sounds/rustle.mp3", Sound.class);
-        assetManager.load(this.rustle);
-
-
-        assetManager.finishLoading();
-
-        setDebugAll(false);
 
         // logo
         Group logoGroup = new Group();
@@ -79,7 +68,7 @@ public class TitleStage extends Stage {
                     Actions.run(new Runnable() {
                         @Override
                         public void run() {
-                            assetManager.get(pop).play(0.5f, 0.5f, 1.0f);
+                            DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, 0.5f, 1.0f);
                         }
                     }),
                     Actions.scaleTo(1.0f, 1.0f, 0.2f)
@@ -127,6 +116,25 @@ public class TitleStage extends Stage {
             np7.setSize(np7.getWidth() * 1.8f, np7.getHeight() * 1.8f);
             logoNotesGroup.addActor(np7);
 
+            for(int i = 0; i < logoNotesGroup.getChildren().size; i++){
+                Actor np = logoNotesGroup.getChildren().get(i);
+                final AssetDescriptor<Sound> npSound = new AssetDescriptor<Sound>(String.format("sounds/logonotesound%d.mp3", i + 1), Sound.class);
+                assetManager.load(npSound);
+                np.addListener(new ActorGestureListener(){
+                    @Override
+                    public void tap(InputEvent event, float x, float y, int count, int button) {
+                        Actor a = event.getListenerActor();
+                        assetManager.get(npSound).play(assetManager.get(warmupMusic).getVolume() * 0.95f, 1.0f, 1.0f);
+                        a.addAction(Actions.sequence(
+                            Actions.scaleTo(0.9f, 0.9f, 0.05f),
+                            Actions.scaleTo(1.1f, 1.1f, 0.1f),
+                            Actions.scaleTo(1.0f, 1.0f, 0.1f)
+                        ));
+                        super.tap(event, x, y, count, button);
+                    }
+                });
+            }
+
             logoNotesGroup.getChildren().shuffle();
 
             for(int i = 0; i < logoNotesGroup.getChildren().size; i++){
@@ -140,7 +148,7 @@ public class TitleStage extends Stage {
                         @Override
                         public void run() {
                             float pitch = Pick.integer(50, 200) / 100;
-                            assetManager.get(pop).play(0.5f, 1.0f, pitch);
+                            DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, 1.0f, pitch);
                         }
                     }),
                     Actions.scaleTo(1.0f, 1.0f, 0.25f),
@@ -251,14 +259,6 @@ public class TitleStage extends Stage {
             Actor a = menuItems.getChildren().get(i);
             a.addAction(Actions.sequence(
                     Actions.delay(4.0f + i * 0.1f),
-                    /*
-                    Actions.run(new Runnable() {
-                        @Override
-                        public void run() {
-                            assetManager.get(rustle).play(0.5f, (float) Pick.integer(175, 250) / 100f, 1.0f);
-                        }
-                    }),
-                    */
                     Actions.moveBy(0, a.getHeight() * 0.1f, 0.1f, Interpolation.sine),
                     Actions.moveBy(0, -(a.getHeight() * 0.1f), 0.1f, Interpolation.sine)
             ));
@@ -272,7 +272,7 @@ public class TitleStage extends Stage {
                                     Actions.run(new Runnable() {
                                         @Override
                                         public void run() {
-                                            assetManager.get(pop).play(0.75f, 0.5f, 1.0f);
+                                            DoReMi.assets.get(DoReMi.sound_pop).play(0.75f, 0.5f, 1.0f);
                                         }
                                     })
                             ),
@@ -280,7 +280,7 @@ public class TitleStage extends Stage {
                                 Actions.run(new Runnable() {
                                     @Override
                                     public void run() {
-                                        assetManager.get(pop).play(1.0f);
+                                        DoReMi.assets.get(DoReMi.sound_pop).play(1.0f);
                                     }
                                 }),
                                 Actions.scaleBy(5f, 5f, 0.25f, Interpolation.sineIn),
@@ -296,38 +296,6 @@ public class TitleStage extends Stage {
         this.menuItems.setPosition(viewport.getWorldWidth() / 2f - this.menuItems.getWidth() / 2, viewport.getWorldHeight() * 0.1f);
 
         addActor(menuItems);
-
-
-        // logo
-        /*
-        Group logoGroup = new Group();
-        logoGroup.setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
-        {
-            AssetDescriptor<Texture> logoImage = new AssetDescriptor<Texture>(Gdx.files.internal("bigimages/logosingle.png"), Texture.class);
-            assetManager.load(logoImage);
-            assetManager.finishLoadingAsset(logoImage.fileName);
-            Image logo = new Image(assetManager.get(logoImage));
-            logo.setPosition(logoGroup.getWidth() * 0.5f - logo.getWidth() * 0.5f, logoGroup.getHeight() * 0.90f - logo.getHeight());
-            logoGroup.addActor(logo);
-
-
-            // handle cute little note parts
-            Group logoNotesGroup = new Group();
-            logoNotesGroup.setSize(logoGroup.getWidth(), logoGroup.getHeight());
-            {
-                Image a = new Image(DoReMi.sprites.findRegion("logonote1"));
-                a.setPosition(logoGroup.getWidth() * 0.1f, logoGroup.getHeight() * 0.85f);
-                logoNotesGroup.addActor(a);
-            }
-
-            logoGroup.addActor(logoNotesGroup);
-
-        }
-
-        addActor(logoGroup);
-
-        logoGroup.setZIndex(0);
-        */
     }
 
     @Override
@@ -338,10 +306,9 @@ public class TitleStage extends Stage {
         if(assetManager.isLoaded(warmupMusic.fileName, warmupMusic.type)){
             Music warmupMusic = assetManager.get(this.warmupMusic);
             if(!warmupMusic.isPlaying()){
-                warmupMusic.setVolume(0);
+                warmupMusic.setVolume(0.25f);
                 warmupMusic.play();
             }
-            warmupMusic.setVolume(Math.min(1.0f, warmupMusic.getVolume() + (0.01f * Gdx.graphics.getDeltaTime())));
         }
     }
 

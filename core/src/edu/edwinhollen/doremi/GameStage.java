@@ -38,15 +38,15 @@ public class GameStage extends Stage {
 
     private boolean solved = false;
 
-    private AssetManager assetManager;
+    // private AssetManager assetManager;
     private Group notePieces;
     private HorizontalGroup solutionSlots;
     private HorizontalGroup topBar;
     private Image listenButton;
     // Group hornGroupLeft, hornGroupRight, hornGroups;
 
+    private AssetManager assetManager;
 
-    private AssetDescriptor<Sound> yay, pop, click, rustle;
 
     public GameStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
@@ -61,19 +61,6 @@ public class GameStage extends Stage {
         this.puzzleStatistics = new PuzzleStatistics(this.puzzle);
 
         List<Actor> solutionNoteActors, extraNoteActors;
-
-        // load necessary sound effects
-        yay = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/yay.mp3"), Sound.class);
-        pop = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/pop.mp3"), Sound.class);
-        click = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/click.mp3"), Sound.class);
-        rustle = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/rustle.mp3"), Sound.class);
-
-        assetManager.load(yay);
-        assetManager.load(pop);
-        assetManager.load(click);
-        // assetManager.load(rustle);
-
-        assetManager.finishLoading();
 
         addListener(new InputListener(){
             @Override
@@ -212,7 +199,7 @@ public class GameStage extends Stage {
                     for(Actor solutionSlot : solutionSlots.getChildren()){
                         if(solutionSlot.getUserObject() != null && solutionSlot.getUserObject().equals(event.getListenerActor().getUserObject())){
                             solutionSlot.setUserObject(null);
-                            assetManager.get(pop).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                            DoReMi.assets.get(DoReMi.sound_pop).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
                             actor.addAction(Actions.sequence(
                                     Actions.scaleTo(0.9f, 0.35f, 0.01f),
                                     Actions.scaleTo(1.4f, 1.4f, 0.075f),
@@ -276,7 +263,7 @@ public class GameStage extends Stage {
                                     Actions.delay(0.015f, Actions.run(new Runnable() {
                                         @Override
                                         public void run() {
-                                            assetManager.get(click).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
+                                            DoReMi.assets.get(DoReMi.sound_click).play(1.0f, 1.0f + (((float) Pick.integer(-10, 10) / 100f)), 1.0f);
                                         }
                                     }))
                                 )
@@ -325,7 +312,7 @@ public class GameStage extends Stage {
                     Actions.run(new Runnable() {
                         @Override
                         public void run() {
-                            assetManager.get(pop).play(1.0f, 1.0f, 1.0f);
+                            DoReMi.assets.get(DoReMi.sound_pop).play(1.0f, 1.0f, 1.0f);
 
                         }
                     })
@@ -421,7 +408,7 @@ public class GameStage extends Stage {
 
 
     public void endSequence(){
-        assetManager.get(yay).play(0.5f);
+        DoReMi.assets.get(DoReMi.sound_yay).play(0.5f);
 
         for(Actor notePiece : notePieces.getChildren()){
             notePiece.clearListeners();

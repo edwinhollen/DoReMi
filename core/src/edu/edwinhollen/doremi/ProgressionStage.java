@@ -23,19 +23,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class ProgressionStage extends Stage {
     private Texture progressionLines;
-    private AssetManager assetManager;
-
-    private AssetDescriptor<Sound> chain;
 
     public ProgressionStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
 
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);
-
-        assetManager = new AssetManager();
-
-        chain = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/chain.mp3"), Sound.class);
-        assetManager.load(chain);
 
         progressionLines = new Texture(Gdx.files.internal("bigimages/progressionlines.png"));
 
@@ -157,7 +149,7 @@ public class ProgressionStage extends Stage {
                             Actions.moveBy(-lock.getWidth() * 0.25f, 0, dur),
                             Actions.moveBy(lock.getWidth() * 0.25f, 0, dur)
                         )));
-                        assetManager.get(chain).play(0.25f, 1.0f, 1.0f);
+                        DoReMi.assets.get(DoReMi.sound_chain).play(0.25f, 1.0f, 1.0f);
                     }
                 });
             }
@@ -174,13 +166,11 @@ public class ProgressionStage extends Stage {
     @Override
     public void act() {
         super.act();
-        assetManager.update();
     }
 
     @Override
     public void dispose() {
         super.dispose();
         progressionLines.dispose();
-        assetManager.dispose();
     }
 }

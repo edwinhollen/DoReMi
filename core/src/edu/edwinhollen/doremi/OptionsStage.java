@@ -24,9 +24,6 @@ public class OptionsStage extends Stage{
     private ShapeRenderer shapeRenderer;
     private final Color backgroundColor = Color.WHITE;
 
-    private AssetManager assetManager;
-    private AssetDescriptor<Sound> pop;
-
     private void plusMinusVisibility(Actor plus, Actor minus){
         boolean minusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"))) > 0;
         boolean plusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"))) < Puzzle.Difficulty.values().length - 1;
@@ -43,7 +40,7 @@ public class OptionsStage extends Stage{
         }
     }
 
-    private Action inputInteractAction(){
+    public static Action inputInteractAction(){
         return Actions.sequence(
                 Actions.scaleTo(1.0f, 0.1f, 0.05f),
                 Actions.scaleTo(1.0f, 1.25f, 0.05f),
@@ -54,10 +51,6 @@ public class OptionsStage extends Stage{
     public OptionsStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
         this.shapeRenderer = new ShapeRenderer();
-        this.assetManager = new AssetManager();
-
-        this.pop = new AssetDescriptor<Sound>(Gdx.files.internal("sounds/pop.mp3"), Sound.class);
-        this.assetManager.load(this.pop);
 
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);
 
@@ -109,7 +102,7 @@ public class OptionsStage extends Stage{
 
                         difficultyDescription.setText(currentDifficulty.getDescription());
 
-                        assetManager.get(pop).play(0.5f, 1.25f, 1.0f);
+                        DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, 1.25f, 1.0f);
 
                         minusDifficulty.addAction(inputInteractAction());
                     }
@@ -132,7 +125,7 @@ public class OptionsStage extends Stage{
 
                         difficultyDescription.setText(currentDifficulty.getDescription());
 
-                        assetManager.get(pop).play(0.5f, 1.5f, 1.0f);
+                        DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, 1.5f, 1.0f);
 
                         plusDifficulty.addAction(inputInteractAction());
 
@@ -204,6 +197,11 @@ public class OptionsStage extends Stage{
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     event.getListenerActor().addAction(inputInteractAction());
                     DoReMi.preferences.putBoolean("note_names", !DoReMi.preferences.getBoolean("note_names"));
+                    float pitch = 0.4f;
+                    if(DoReMi.preferences.getBoolean("note_names")){
+                        pitch = 0.75f;
+                    }
+                    DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, pitch, 1.0f);
                     showHideCheck.run();
                     super.tap(event, x, y, count, button);
                 }
@@ -316,12 +314,6 @@ public class OptionsStage extends Stage{
         shapeRenderer.rect(0, 0, getViewport().getScreenWidth(), getViewport().getScreenHeight());
         shapeRenderer.end();
         super.draw();
-    }
-
-    @Override
-    public void act() {
-        super.act();
-        assetManager.update();
     }
 
     @Override

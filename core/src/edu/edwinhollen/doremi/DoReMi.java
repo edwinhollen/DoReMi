@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -43,7 +44,10 @@ public class DoReMi extends ApplicationAdapter {
 	static String version;
 	// static WebStats webStats;
 
+	static AssetDescriptor<Sound> sound_click, sound_pop, sound_rustle, sound_yay, sound_chain;
+
 	static AssetManager assets;
+
 
 	@Override
 	public void create () {
@@ -54,6 +58,23 @@ public class DoReMi extends ApplicationAdapter {
 		assets = new AssetManager();
 		// webStats = new WebStats();
 
+		// load common sound effects
+		sound_click = new AssetDescriptor<Sound>("sounds/click.mp3", Sound.class);
+		assets.load(sound_click);
+
+		sound_rustle = new AssetDescriptor<Sound>("sounds/rustle.mp3", Sound.class);
+		assets.load(sound_rustle);
+
+		sound_pop = new AssetDescriptor<Sound>("sounds/pop.mp3", Sound.class);
+		assets.load(sound_pop);
+
+		sound_yay = new AssetDescriptor<Sound>("sounds/yay.mp3", Sound.class);
+		assets.load(sound_yay);
+
+		sound_chain = new AssetDescriptor<Sound>("sounds/chain.mp3", Sound.class);
+		assets.load(sound_chain);
+
+		// get the version
 		version = Gdx.files.internal("version.txt").readString().replace("[", "").replace("]", "");
 
 		{
@@ -129,6 +150,7 @@ public class DoReMi extends ApplicationAdapter {
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		assets.update();
 		if(currentStage != null){
 			currentStage.act();
 			currentStage.draw();
@@ -213,6 +235,7 @@ public class DoReMi extends ApplicationAdapter {
 		sprites.dispose();
 		batch.dispose();
 		currentStage.dispose();
+		assets.dispose();
 		super.dispose();
 	}
 }
