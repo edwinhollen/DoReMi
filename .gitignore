@@ -67,4 +67,5 @@ build/
 android/assets/pack*.png
 *.keystore
 android/assets/*.atlas
+android/assets/version.txt
 

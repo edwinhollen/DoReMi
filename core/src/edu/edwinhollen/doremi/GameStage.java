@@ -1,28 +1,21 @@
 package edu.edwinhollen.doremi;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Date;
@@ -441,75 +434,77 @@ public class GameStage extends Stage {
                 })
         ));
 
-        // do the actions
-        /*
-        // horns and flags
-        Group hornGroups = new Group();
-        hornGroups.setSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
-        Group hornGroupLeft = new Group();
-        Group hornGroupRight = new Group();
+        {
+            // do the actions
+            /*
+            // horns and flags
+            Group hornGroups = new Group();
+            hornGroups.setSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
+            Group hornGroupLeft = new Group();
+            Group hornGroupRight = new Group();
 
-        // horn group left
-        Image horn = new Image(DoReMi.sprites.findRegion("horn"));
-        Image flagRoll = new Image(DoReMi.sprites.findRegion("flagroll"));
-        Image flag = new Image(DoReMi.sprites.findRegion("flag"));
+            // horn group left
+            Image horn = new Image(DoReMi.sprites.findRegion("horn"));
+            Image flagRoll = new Image(DoReMi.sprites.findRegion("flagroll"));
+            Image flag = new Image(DoReMi.sprites.findRegion("flag"));
 
-        horn.setRotation(38f);
+            horn.setRotation(38f);
 
-        flagRoll.setOrigin(Align.top);
-        flagRoll.setRotation(28f);
-        flagRoll.setPosition(horn.getWidth() * 0.16f, horn.getHeight() * 1.2f);
-        flagRoll.addAction(Actions.sequence(
-                Actions.delay(1.75f),
-                Actions.scaleTo(1.0f, 0.8f, 0.2f),
-                Actions.fadeOut(0.075f)
-        ));
+            flagRoll.setOrigin(Align.top);
+            flagRoll.setRotation(28f);
+            flagRoll.setPosition(horn.getWidth() * 0.16f, horn.getHeight() * 1.2f);
+            flagRoll.addAction(Actions.sequence(
+                    Actions.delay(1.75f),
+                    Actions.scaleTo(1.0f, 0.8f, 0.2f),
+                    Actions.fadeOut(0.075f)
+            ));
 
-        flag.setOrigin(Align.top);
-        flag.setRotation(2f);
-        flag.setPosition(horn.getWidth() * 0.20f, horn.getHeight() * - 0.4f);
-        flag.setVisible(false);
-        flag.addAction(Actions.delay(1.3f, Actions.run(new Runnable() {
-                   @Override
-                   public void run() {
-                       assetManager.get("sounds/rustle.mp3", Sound.class).play();
+            flag.setOrigin(Align.top);
+            flag.setRotation(2f);
+            flag.setPosition(horn.getWidth() * 0.20f, horn.getHeight() * - 0.4f);
+            flag.setVisible(false);
+            flag.addAction(Actions.delay(1.3f, Actions.run(new Runnable() {
+                       @Override
+                       public void run() {
+                           assetManager.get("sounds/rustle.mp3", Sound.class).play();
+                       }
                    }
-               }
-        )));
-        flag.addAction(Actions.sequence(
-            Actions.delay(1.75f),
-            Actions.scaleTo(1.0f, 0f),
-            Actions.visible(true),
-            Actions.scaleTo(1.0f, 1.4f, 0.1f),
-            Actions.scaleTo(1.0f, 1.0f, 0.1f)
-        ));
-
-        hornGroupLeft.addActor(horn);
-        hornGroupLeft.addActor(flag);
-        hornGroupLeft.addActor(flagRoll);
-
-        hornGroupLeft.setPosition(getViewport().getWorldWidth() * 0.25f, getViewport().getWorldHeight() * 0.5f);
-        hornGroupLeft.setOrigin(Align.left);
-        hornGroupLeft.addAction(Actions.sequence(
-                Actions.delay(0.65f),
-                Actions.scaleTo(1.1f, 1.0f, 0.05f),
-                Actions.delay(0.1f),
-                Actions.scaleTo(1.0f, 1.0f, 0.08f),
-                Actions.scaleTo(1.1f, 1.0f, 0.05f),
-                Actions.delay(0.1f),
-                Actions.scaleTo(1.0f, 1.0f, 0.08f),
-                Actions.scaleTo(1.2f, 1.0f, 0.05f),
-                Actions.delay(0.75f),
+            )));
+            flag.addAction(Actions.sequence(
+                Actions.delay(1.75f),
+                Actions.scaleTo(1.0f, 0f),
+                Actions.visible(true),
+                Actions.scaleTo(1.0f, 1.4f, 0.1f),
                 Actions.scaleTo(1.0f, 1.0f, 0.1f)
-        ));
+            ));
 
-        // horn group right
+            hornGroupLeft.addActor(horn);
+            hornGroupLeft.addActor(flag);
+            hornGroupLeft.addActor(flagRoll);
 
-        hornGroups.addActor(hornGroupLeft);
-        hornGroups.addActor(hornGroupRight);
+            hornGroupLeft.setPosition(getViewport().getWorldWidth() * 0.25f, getViewport().getWorldHeight() * 0.5f);
+            hornGroupLeft.setOrigin(Align.left);
+            hornGroupLeft.addAction(Actions.sequence(
+                    Actions.delay(0.65f),
+                    Actions.scaleTo(1.1f, 1.0f, 0.05f),
+                    Actions.delay(0.1f),
+                    Actions.scaleTo(1.0f, 1.0f, 0.08f),
+                    Actions.scaleTo(1.1f, 1.0f, 0.05f),
+                    Actions.delay(0.1f),
+                    Actions.scaleTo(1.0f, 1.0f, 0.08f),
+                    Actions.scaleTo(1.2f, 1.0f, 0.05f),
+                    Actions.delay(0.75f),
+                    Actions.scaleTo(1.0f, 1.0f, 0.1f)
+            ));
 
-        // addActor(hornGroups);
-        */
+            // horn group right
+
+            hornGroups.addActor(hornGroupLeft);
+            hornGroups.addActor(hornGroupRight);
+
+            // addActor(hornGroups);
+            */
+        }
 
         // confetti
         Group confettiGroup = new Group();
@@ -540,10 +535,47 @@ public class GameStage extends Stage {
         }
         addActor(confettiGroup);
 
+        HorizontalGroup buttonGroup = new HorizontalGroup();
+
+        buttonGroup.addAction(Actions.sequence(
+                Actions.alpha(0f),
+                Actions.delay(1.0f),
+                Actions.fadeIn(1.0f)
+        ));
+
+        // continue button
+        Group continueButton = UI.ClickButton("Next puzzle", DoReMi.labelNormal, new Runnable(){
+            @Override
+            public void run() {
+                DoReMi.changeStage(GameStage.class);
+            }
+        });
+
+
+        buttonGroup.addActor(continueButton);
+
+        // back button
+        Group backButton = UI.ClickButton("Quit", DoReMi.labelNormal, new Runnable() {
+            @Override
+            public void run() {
+                DoReMi.changeStage(ProgressionStage.class);
+            }
+        });
+        buttonGroup.addActor(backButton);
+
+        buttonGroup.setWidth(continueButton.getWidth() + backButton.getWidth());
+
+        buttonGroup.center();
+        buttonGroup.layout();
+        buttonGroup.setPosition(getViewport().getWorldWidth() * 0.5f, getViewport().getWorldHeight() * 0.5f, Align.center);
+
+        addActor(buttonGroup);
+
+
         DoReMi.preferences.putInteger("progress", DoReMi.preferences.getInteger("progress") + 1);
 
-
         // temporary transition
+        /*
         addAction(Actions.delay(4.0f, Actions.run(new Runnable() {
           @Override
           public void run() {
@@ -551,6 +583,7 @@ public class GameStage extends Stage {
           }
         }
         )));
+        */
     }
 
     public boolean checkSolution(){
