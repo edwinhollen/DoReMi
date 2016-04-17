@@ -42,7 +42,7 @@ public class InfoStage extends Stage {
         float bottomSpace = viewport.getWorldHeight() * 0.1f;
 
         {
-            Label summary = new Label(String.format("DoReMi is an open-source educational music puzzle and ear training game."), DoReMi.labelNormal);
+            Label summary = new Label(String.format("DoReMi is an open-source educational\nmusic puzzle and ear training game."), DoReMi.labelNormal);
             summary.setWrap(true);
             summary.setAlignment(Align.center);
             masterTable.add(summary).spaceBottom(bottomSpace).row();
@@ -65,9 +65,9 @@ public class InfoStage extends Stage {
             masterTable.add(site).spaceBottom(bottomSpace).row();
 
             Label version = new Label(String.format("Currently running version %s", DoReMi.version), DoReMi.labelMini);
+            version.setAlignment(Align.center);
 
             masterTable.add(version).spaceBottom(bottomSpace).row();
-
         }
 
         addActor(scrollpane);

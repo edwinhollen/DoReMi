@@ -1,5 +1,6 @@
 package edu.edwinhollen.doremi.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.edwinhollen.doremi.DoReMi;
@@ -34,6 +35,10 @@ public class DesktopLauncher {
 		config.width = (int) (config.getDesktopDisplayMode().width * 0.5f);
 		config.height = (int) (config.getDesktopDisplayMode().height * 0.5f);
 		config.samples = 16;
+		config.addIcon("icon-mac.png", Files.FileType.Internal);
+		config.addIcon("icon-linux.png", Files.FileType.Internal);
+		config.addIcon("icon-windows.png", Files.FileType.Internal);
+		config.vSyncEnabled = true;
 
 		new LwjglApplication(new DoReMi(), config);
 	}
