@@ -14,7 +14,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '0.05-alpha'
+    version = '0.06-alpha'
     ext {
         appName = "DoReMi"
         gdxVersion = '1.9.1'
