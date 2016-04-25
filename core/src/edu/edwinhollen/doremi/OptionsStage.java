@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Arrays;
@@ -59,6 +60,7 @@ public class OptionsStage extends Stage{
         table.setPosition(viewport.getWorldWidth() * 0.5f, viewport.getWorldHeight() * 0.5f, Align.center);
         table.align(Align.center);
         table.setOrigin(Align.center);
+        table.defaults().spaceBottom(viewport.getWorldHeight() * 0.05f);
 
         // label
         table.columnDefaults(0).width(table.getWidth() * 0.35f);
@@ -215,6 +217,20 @@ public class OptionsStage extends Stage{
             table.add(checkGroup);
             table.add(noteNameDescription);
             table.row();
+        }
+
+        {
+            // clear stats
+            Label clearStatsLabel = new Label("Clear statistics", DoReMi.labelNormal);
+            Group clearStatsButton = UI.ClickButton("Clear statistics", DoReMi.labelNormal, new Runnable() {
+                @Override
+                public void run() {
+                    Json json = new Json();
+                    DoReMi.preferences.putString("stats", json.toJson(new PuzzleStatisticsJson()));
+                }
+            });
+            table.add(clearStatsLabel);
+            table.add(clearStatsButton);
         }
 
         /*
