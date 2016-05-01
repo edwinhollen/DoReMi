@@ -30,7 +30,7 @@ public class Puzzle {
                 pattern = Pick.pick(ScalePatterns.values());
                 break;
             default:
-                pattern = ScalePatterns.MAJOR;
+                pattern = Pick.pick(new ScalePatterns[]{ScalePatterns.MAJOR, ScalePatterns.MINOR});
         }
 
         Scale scale = new Scale(new Note(rootChromatic, LOWEST_OCTAVE), pattern.getPattern());
@@ -88,8 +88,8 @@ public class Puzzle {
     }
 
     enum Difficulty{
-        EASY("Major arpeggio puzzles"),
-        MEDIUM("Major and minor arpeggio puzzles"),
+        EASY("Major and minor arpeggios"),
+        MEDIUM("Major and minor ascending sequences"),
         HARD("Chromatic puzzles");
         final private String description;
         Difficulty(String description){
