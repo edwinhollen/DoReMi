@@ -25,9 +25,12 @@ public class OptionsStage extends Stage{
     private ShapeRenderer shapeRenderer;
     private final Color backgroundColor = Color.WHITE;
 
+    private Puzzle.Difficulty currentDifficulty;
+    private Boolean noteNames;
+
     private void plusMinusVisibility(Actor plus, Actor minus){
-        boolean minusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"))) > 0;
-        boolean plusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"))) < Puzzle.Difficulty.values().length - 1;
+        boolean minusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(currentDifficulty) > 0;
+        boolean plusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(currentDifficulty) < Puzzle.Difficulty.values().length - 1;
 
         if(!minusVisible){
             minus.addAction(Actions.alpha(0.1f, 0.1f));
@@ -54,6 +57,10 @@ public class OptionsStage extends Stage{
         this.shapeRenderer = new ShapeRenderer();
 
         DoReMi.addBackButton(this, Color.LIGHT_GRAY);
+
+        // get prefs
+        this.currentDifficulty = Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"));
+        this.noteNames = DoReMi.preferences.getBoolean("note_names");
 
         Table table = new Table();
         table.setSize(viewport.getWorldWidth() * 0.9f, viewport.getWorldHeight() * 0.9f);
@@ -85,7 +92,7 @@ public class OptionsStage extends Stage{
             lblDifficulty.setAlignment(Align.topLeft);
 
 
-            final Label valDifficulty = new Label(DoReMi.preferences.getString("difficulty"), DoReMi.labelNormal);
+            final Label valDifficulty = new Label(this.currentDifficulty.toString(), DoReMi.labelNormal);
             valDifficulty.setAlignment(Align.center);
 
             minusDifficulty.setColor(Color.BLACK);
@@ -93,11 +100,9 @@ public class OptionsStage extends Stage{
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     super.tap(event, x, y, count, button);
-                    Puzzle.Difficulty currentDifficulty = Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"));
                     Integer currentDifficultyIndex = Arrays.asList(Puzzle.Difficulty.values()).indexOf(currentDifficulty);
                     if(currentDifficultyIndex > 0){
-                        currentDifficultyIndex -= 1;
-                        currentDifficulty = Puzzle.Difficulty.values()[currentDifficultyIndex];
+                        currentDifficulty = Puzzle.Difficulty.values()[currentDifficultyIndex - 1];
                         DoReMi.preferences.putString("difficulty", currentDifficulty.toString());
                         valDifficulty.setText(currentDifficulty.toString());
                         plusMinusVisibility(plusDifficulty, minusDifficulty);
@@ -116,11 +121,9 @@ public class OptionsStage extends Stage{
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     super.tap(event, x, y, count, button);
-                    Puzzle.Difficulty currentDifficulty = Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"));
                     Integer currentDifficultyIndex = Arrays.asList(Puzzle.Difficulty.values()).indexOf(currentDifficulty);
                     if(currentDifficultyIndex < Puzzle.Difficulty.values().length - 1){
-                        currentDifficultyIndex += 1;
-                        currentDifficulty = Puzzle.Difficulty.values()[currentDifficultyIndex];
+                        currentDifficulty = Puzzle.Difficulty.values()[currentDifficultyIndex + 1];
                         DoReMi.preferences.putString("difficulty", currentDifficulty.toString());
                         valDifficulty.setText(currentDifficulty.toString());
                         plusMinusVisibility(plusDifficulty, minusDifficulty);
@@ -130,12 +133,6 @@ public class OptionsStage extends Stage{
                         DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, 1.5f, 1.0f);
 
                         plusDifficulty.addAction(inputInteractAction());
-
-                        /*
-                        valDifficulty.addAction(Actions.sequence(
-                                Actions.rotateTo(60f)
-                        ));
-                        */
                     }
                 }
             });
@@ -165,7 +162,7 @@ public class OptionsStage extends Stage{
             minusDifficulty.toFront();
 
 
-            difficultyDescription.setText(Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty")).getDescription());
+            difficultyDescription.setText(currentDifficulty.getDescription());
             table.add();
             table.add(difficultyDescription).colspan(2);
             table.row();
@@ -189,7 +186,7 @@ public class OptionsStage extends Stage{
             final Runnable showHideCheck = new Runnable() {
                 @Override
                 public void run() {
-                    check.setVisible(DoReMi.preferences.getBoolean("note_names"));
+                    check.setVisible(noteNames);
                     uncheck.setVisible(!check.isVisible());
                 }
             };
@@ -198,9 +195,10 @@ public class OptionsStage extends Stage{
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     event.getListenerActor().addAction(inputInteractAction());
-                    DoReMi.preferences.putBoolean("note_names", !DoReMi.preferences.getBoolean("note_names"));
+                    noteNames = !noteNames;
+                    DoReMi.preferences.putBoolean("note_names", noteNames);
                     float pitch = 0.4f;
-                    if(DoReMi.preferences.getBoolean("note_names")){
+                    if(noteNames){
                         pitch = 0.75f;
                     }
                     DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, pitch, 1.0f);
