@@ -56,7 +56,7 @@ public class OptionsStage extends Stage{
         super(viewport, batch);
         this.shapeRenderer = new ShapeRenderer();
 
-        DoReMi.addBackButton(this, Color.LIGHT_GRAY);
+        DoReMi.addBackButton(this, Color.LIGHT_GRAY, TitleStage.class);
 
         // get prefs
         this.currentDifficulty = Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"));
@@ -66,16 +66,18 @@ public class OptionsStage extends Stage{
 
         // build table
         Table table = new Table();
-        table.setSize(viewport.getWorldWidth() * 0.9f, viewport.getWorldHeight() * 0.9f);
-        table.setPosition(viewport.getWorldWidth() * 0.5f, viewport.getWorldHeight() * 0.5f, Align.center);
+        table.setSize(viewport.getWorldWidth() * 0.85f, viewport.getWorldHeight() * 0.9f);
+        // table.setPosition(viewport.getWorldWidth() * 0.5f, viewport.getWorldHeight() * 0.5f, Align.center);
         table.align(Align.center);
         table.setOrigin(Align.center);
         table.defaults().spaceBottom(viewport.getWorldHeight() * 0.05f);
 
         // scroll
         ScrollPane scrollPane = new ScrollPane(table);
-        scrollPane.setWidth(viewport.getWorldWidth());
-        scrollPane.setHeight(viewport.getWorldHeight());
+        scrollPane.setWidth(table.getWidth());
+        scrollPane.setHeight(table.getHeight());
+
+        scrollPane.setPosition(viewport.getWorldWidth() * 0.95f, viewport.getWorldHeight() * 0.5f, Align.right);
 
         // label
         table.columnDefaults(0).width(table.getWidth() * 0.35f);
@@ -237,6 +239,8 @@ public class OptionsStage extends Stage{
             });
             table.add(clearStatsLabel);
             table.add(clearStatsButton);
+            table.add();
+            table.row();
         }
 
         /*
