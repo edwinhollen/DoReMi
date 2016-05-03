@@ -116,6 +116,10 @@ public class DoReMi extends ApplicationAdapter {
 			preferences.putBoolean("note_names", false);
 		}
 
+		if(!preferences.contains("note_outlines")){
+			preferences.putBoolean("note_outlines", false);
+		}
+
 		/*
 		if(!preferences.contains("web_stats")){
 			preferences.putBoolean("web_stats", false);

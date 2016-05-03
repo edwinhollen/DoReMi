@@ -27,6 +27,7 @@ public class OptionsStage extends Stage{
 
     private Puzzle.Difficulty currentDifficulty;
     private Boolean noteNames;
+    private Boolean noteOutlines;
 
     private void plusMinusVisibility(Actor plus, Actor minus){
         boolean minusVisible = Arrays.asList(Puzzle.Difficulty.values()).indexOf(currentDifficulty) > 0;
@@ -61,6 +62,7 @@ public class OptionsStage extends Stage{
         // get prefs
         this.currentDifficulty = Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"));
         this.noteNames = DoReMi.preferences.getBoolean("note_names");
+        this.noteOutlines = DoReMi.preferences.getBoolean("note_outlines");
 
 
 
@@ -224,6 +226,55 @@ public class OptionsStage extends Stage{
             table.add(noteNameLabel);
             table.add(checkGroup);
             table.add(noteNameDescription);
+            table.row();
+        }
+
+        {
+            final Label noteOutlineLabel = new Label("Note outlines:", DoReMi.labelNormal);
+            final Label noteOutlineDescription = new Label("Use outlined note heads", DoReMi.labelMini);
+            final Group checkGroup = new Group();
+            final Image check = new Image(DoReMi.sprites.findRegion("checkboxchecked-sized"));
+            final Image uncheck = new Image(DoReMi.sprites.findRegion("checkboxunchecked-sized"));
+
+            check.setColor(Color.BLACK);
+            uncheck.setColor(Color.BLACK);
+
+            checkGroup.setSize(check.getWidth(), check.getHeight());
+
+            checkGroup.addActor(check);
+            checkGroup.addActor(uncheck);
+
+            final Runnable showHideCheck = new Runnable() {
+                @Override
+                public void run() {
+                    check.setVisible(noteOutlines);
+                    uncheck.setVisible(!check.isVisible());
+                }
+            };
+
+            checkGroup.addListener(new ActorGestureListener(){
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    event.getListenerActor().addAction(inputInteractAction());
+                    noteOutlines = !noteOutlines;
+                    DoReMi.preferences.putBoolean("note_outlines", noteOutlines);
+                    float pitch = 0.4f;
+                    if(noteNames){
+                        pitch = 0.75f;
+                    }
+                    DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, pitch, 1.0f);
+                    showHideCheck.run();
+                    super.tap(event, x, y, count, button);
+                }
+            });
+
+            checkGroup.setOrigin(Align.center);
+
+            showHideCheck.run();
+
+            table.add(noteOutlineLabel);
+            table.add(checkGroup);
+            table.add(noteOutlineDescription);
             table.row();
         }
 

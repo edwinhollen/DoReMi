@@ -116,22 +116,22 @@ public class GameStage extends Stage {
             switch(note.getChromatic()){
                 case C_NATURAL:
                 case C_SHARP:
-                    y = note.getOctave() < 3 ? 0.121f : 0.592f;
+                    y = note.getOctave() < 3 ? 0.09f : 0.592f;
                     drawLine = note.getOctave() < 3;
                     break;
                 case D_NATURAL:
-                    y = note.getOctave() < 3 ? 0.162f : 0.656f;
+                    y = note.getOctave() < 3 ? 0.140f : 0.656f;
                     break;
                 case E_FLAT:
                 case E_NATURAL:
-                    y = note.getOctave() < 3 ? 0.203f : 0.656f;
+                    y = note.getOctave() < 3 ? 0.190f : 0.656f;
                     break;
                 case F_NATURAL:
                 case F_SHARP:
                     y = note.getOctave() < 3 ? 0.277f : 0.807f;
                     break;
                 case G_NATURAL:
-                    y = note.getOctave() < 3 ? 0.357f : 0.869f;
+                    y = note.getOctave() < 3 ? 0.330f : 0.869f;
                     break;
                 case A_FLAT:
                 case A_NATURAL:
@@ -145,7 +145,14 @@ public class GameStage extends Stage {
 
             y = y - 0.1f;
 
-            Image noteHead = new Image(DoReMi.sprites.findRegion(drawLine ? "noteheadwithline" : "notehead"));
+            String imageName = drawLine ? "noteheadwithline" : "notehead";
+            if(DoReMi.preferences.getBoolean("note_outlines")){
+                imageName = imageName.concat("-outline");
+            }
+            Image noteHead = new Image(DoReMi.sprites.findRegion(imageName));
+
+            noteHead.setHeight(noteHead.getHeight() * 0.85f);
+
             noteHead.setPosition(notePieceGroup.getWidth() / 2 - noteHead.getWidth() / 2, notePieceGroup.getHeight() * y);
             noteHead.setColor(Color.valueOf(note.getChromatic().getColor()));
             notePieceGroup.addActor(noteHead);
