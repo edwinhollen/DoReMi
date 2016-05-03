@@ -62,12 +62,20 @@ public class OptionsStage extends Stage{
         this.currentDifficulty = Puzzle.Difficulty.valueOf(DoReMi.preferences.getString("difficulty"));
         this.noteNames = DoReMi.preferences.getBoolean("note_names");
 
+
+
+        // build table
         Table table = new Table();
         table.setSize(viewport.getWorldWidth() * 0.9f, viewport.getWorldHeight() * 0.9f);
         table.setPosition(viewport.getWorldWidth() * 0.5f, viewport.getWorldHeight() * 0.5f, Align.center);
         table.align(Align.center);
         table.setOrigin(Align.center);
         table.defaults().spaceBottom(viewport.getWorldHeight() * 0.05f);
+
+        // scroll
+        ScrollPane scrollPane = new ScrollPane(table);
+        scrollPane.setWidth(viewport.getWorldWidth());
+        scrollPane.setHeight(viewport.getWorldHeight());
 
         // label
         table.columnDefaults(0).width(table.getWidth() * 0.35f);
@@ -219,7 +227,7 @@ public class OptionsStage extends Stage{
 
         {
             // clear stats
-            Label clearStatsLabel = new Label("Clear statistics", DoReMi.labelNormal);
+            Label clearStatsLabel = new Label("Statistics:", DoReMi.labelNormal);
             Group clearStatsButton = UI.ClickButton("Clear statistics", DoReMi.labelNormal, new Runnable() {
                 @Override
                 public void run() {
@@ -317,7 +325,8 @@ public class OptionsStage extends Stage{
         */
 
 
-        addActor(table);
+        // addActor(table);
+        addActor(scrollPane);
 
     }
 
