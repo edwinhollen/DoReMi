@@ -259,7 +259,7 @@ public class OptionsStage extends Stage{
                     noteOutlines = !noteOutlines;
                     DoReMi.preferences.putBoolean("note_outlines", noteOutlines);
                     float pitch = 0.4f;
-                    if(noteNames){
+                    if(noteOutlines){
                         pitch = 0.75f;
                     }
                     DoReMi.assets.get(DoReMi.sound_pop).play(0.5f, pitch, 1.0f);
